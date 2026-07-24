@@ -1,0 +1,10 @@
+{
+  "name": "@sovereignfs/workbench-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CLI for bootstrapping and managing the sovereignfs dev workbench",
+  "type": "module",
+  "bin": {
+    "workbench": "bin/workbench.js"
+  }
+}

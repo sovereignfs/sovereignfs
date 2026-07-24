@@ -1,0 +1,40 @@
+{
+  "repos": [
+    {
+      "id": "sovereign",
+      "url": "git@github.com:sovereignfs/sovereign.git",
+      "path": "sovereign",
+      "type": "runtime"
+    },
+    {
+      "id": "sovereign-os",
+      "url": "git@github.com:sovereignfs/sovereign-os.git",
+      "path": "sovereign-os",
+      "type": "os"
+    },
+    {
+      "id": "sovereign-desktop",
+      "url": "git@github.com:sovereignfs/sovereign-desktop.git",
+      "path": "sovereign-desktop",
+      "type": "desktop"
+    },
+    {
+      "id": "sovereign-infra",
+      "url": "git@github.com:sovereignfs/sovereign-infra.git",
+      "path": "support/sovereign-infra",
+      "type": "support"
+    },
+    {
+      "id": "sovereign-plugins-examples",
+      "url": "git@github.com:sovereignfs/sovereign-plugins-examples.git",
+      "path": "support/sovereign-plugins-examples",
+      "type": "support"
+    },
+    {
+      "id": "sovereign-plugin-template",
+      "url": "git@github.com:sovereignfs/sovereign-plugin-template.git",
+      "path": "support/sovereign-plugin-template",
+      "type": "support"
+    }
+  ]
+}

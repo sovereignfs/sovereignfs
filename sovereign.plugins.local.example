@@ -1,0 +1,16 @@
+# Personal, git-ignored list of Sovereign plugin repos to clone for local
+# development against sovereign/ (see docs/plugin-development.md in that
+# repo for the ".local" plugin convention).
+#
+# Copy this file to sovereign.plugins.local (no .example suffix) and edit
+# it — that file is gitignored, never committed. Run `./workbench.sh
+# plugins pull` to clone every listed repo into sovereign/plugins/<name>.local.
+#
+# Format, one entry per line:
+#   <git-url>          → cloned to sovereign/plugins/<repo-name>.local
+#   <name> <git-url>   → cloned to sovereign/plugins/<name>.local
+# Blank lines and "#" comments (whole-line or trailing) are ignored.
+
+# Plugins I'm actively developing
+git@github.com:sovereignfs/sovereign-tasks.git
+notes git@github.com:me/plugin-notes.git

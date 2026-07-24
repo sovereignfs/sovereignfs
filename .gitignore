@@ -1,0 +1,19 @@
+# Spawned by `workbench init` / `workbench pod create` — see workbench.manifest.json
+/sovereign/
+/sovereign-os/
+/sovereign-desktop/
+/support/
+/pods/
+
+# Personal list of plugin repos to clone as sovereign/plugins/<name>.local
+# (read by `workbench plugins pull`) — see sovereign.plugins.local.example
+/sovereign.plugins.local
+
+# Fetched content and build output for the docs site — see
+# docs/docs-sync.manifest.json and `workbench docs fetch`
+/docs/.fetched/
+/docs/.vitepress/dist/
+/docs/.vitepress/cache/
+
+node_modules/
+.DS_Store
