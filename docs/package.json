@@ -1,0 +1,24 @@
+{
+  "name": "@sovereignfs/docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.5.2",
+  "scripts": {
+    "predev": "../workbench.sh docs fetch",
+    "dev": "vitepress dev",
+    "prebuild": "../workbench.sh docs fetch",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "@fontsource/hanken-grotesk": "^5.2.8",
+    "@vueuse/core": "^12.8.2",
+    "@vueuse/integrations": "^12.8.2",
+    "mark.js": "^8.11.1",
+    "minisearch": "^7.2.0",
+    "typescript": "^5.9.0",
+    "vitepress": "^1.6.3",
+    "vue": "^3.5.39"
+  }
+}

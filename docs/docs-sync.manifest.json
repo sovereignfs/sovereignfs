@@ -1,0 +1,46 @@
+{
+  "sources": [
+    {
+      "id": "sovereign",
+      "repo": "sovereign",
+      "paths": [
+        { "from": "docs/get-started", "to": "get-started" },
+        { "from": "docs/guides", "to": "guides" },
+        { "from": "docs/plugins", "to": "plugins" },
+        { "from": "docs/product", "to": "product" },
+        { "from": "docs/rfcs", "to": "rfcs", "exclude": ["TEMPLATE.md"] },
+        { "from": "docs/public", "to": "public" },
+        { "from": "docs/agent-first-documentation.md", "to": "agent-first-documentation.md" },
+        { "from": "docs/architecture-rules.md", "to": "architecture-rules.md" },
+        { "from": "docs/architecture.md", "to": "architecture.md" },
+        { "from": "docs/design-system.md", "to": "design-system.md" },
+        { "from": "docs/documentation-structure.md", "to": "documentation-structure.md" },
+        { "from": "docs/development-workflow.md", "to": "development-workflow.md" },
+        { "from": "docs/index.md", "to": "index.md" },
+        { "from": "docs/instances.md", "to": "instances.md" },
+        { "from": "docs/plugin-database.md", "to": "plugin-database.md" },
+        { "from": "docs/plugin-development.md", "to": "plugin-development.md" },
+        { "from": "docs/product-roadmap.md", "to": "product-roadmap.md" },
+        { "from": "docs/pwa-real-device-testing.md", "to": "pwa-real-device-testing.md" },
+        { "from": "docs/repositories.md", "to": "repositories.md" },
+        { "from": "docs/sdk-stability.md", "to": "sdk-stability.md" },
+        { "from": "docs/security.md", "to": "security.md" },
+        { "from": "docs/self-hosting.md", "to": "self-hosting.md" },
+        { "from": "docs/testing-e2e.md", "to": "testing-e2e.md" },
+        { "from": "docs/troubleshooting.md", "to": "troubleshooting.md" },
+        { "from": "docs/upgrade.md", "to": "upgrade.md" }
+      ]
+    },
+    {
+      "id": "sovereign-os",
+      "repo": "sovereign-os",
+      "paths": [
+        { "from": "docs/product", "to": "sovereign-os/product" },
+        { "from": "docs/rfcs", "to": "sovereign-os/rfcs" },
+        { "from": "docs/adrs", "to": "sovereign-os/adrs" },
+        { "from": "ROADMAP.md", "to": "sovereign-os/roadmap.md" },
+        { "from": "CONCEPT.md", "to": "sovereign-os/concept.md" }
+      ]
+    }
+  ]
+}
