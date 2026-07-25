@@ -59,3 +59,19 @@ judgment. `workbench confluence lint`/`sync` now print a ready-to-paste
 pages and source repos need re-reading, so the loop from "detected stale"
 to "an agent updates it" doesn't require reconstructing the instruction
 by hand each time.
+
+## [2026-07-25] tooling | pod create implemented
+
+`workbench pod create <project>` (previously a stub erroring "not
+implemented yet") now does the full flow from
+`CONCEPT.md#pods-isolated-checkouts-for-parallel-work`: scans `pods/` for
+the next free `p<n>`/`os<n>` slot per project, clones fresh, copies the
+main checkout's `.env` and rewrites its fixed-port vars (currently
+`RUNTIME_PORT`/`AUTH_PORT` for `sovereign`, a 10-port block per pod index
+starting at 5000/5001 for `p1`) plus any `localhost:<default-port>`
+reference elsewhere in the file, then runs `pnpm install` if the pod has
+a `package.json`. Verified end-to-end against the real `sovereign`
+checkout: `p1` got 5000/5001, a second pod correctly got `p2` at
+5010/5011. `sovereign-os` has no `.env`/`package.json` today, so its pods
+just clone — the port-var map (`POD_PORT_VARS` in `cli/bin/workbench.js`)
+is keyed per project id so that's a one-line addition if that changes.

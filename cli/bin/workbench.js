@@ -10,6 +10,7 @@ import {
   readdirSync,
   readFileSync,
   rmSync,
+  writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -428,14 +429,115 @@ function cmdKillPort(args) {
   if (failed.length) process.exitCode = 1;
 }
 
-function cmdPod(args) {
-  const [sub, project] = args;
-  if (sub === "create" && project) {
+// p<n> for sovereign pods, os<n> for sovereign-os pods — see
+// CONCEPT.md#pods-isolated-checkouts-for-parallel-work. Only projects with a
+// prefix here are poddable; sovereign-desktop/support repos are not.
+const POD_PREFIXES = {
+  sovereign: "p",
+  "sovereign-os": "os",
+};
+
+// Fixed-port env vars this CLI knows how to rewrite into a pod's isolated
+// port block, and the default port each falls back to in the main checkout
+// (so literal "localhost:<default>" references elsewhere in the file can be
+// rewritten too). Extend this per project id if it grows more fixed-port
+// services.
+const POD_PORT_VARS = {
+  sovereign: [
+    { key: "RUNTIME_PORT", default: 3000 },
+    { key: "AUTH_PORT", default: 3001 },
+  ],
+};
+
+function nextPodIndex(prefix) {
+  const podsDir = join(ROOT, "pods");
+  if (!existsSync(podsDir)) return 1;
+  const re = new RegExp(`^${prefix}(\\d+)$`);
+  let max = 0;
+  for (const name of readdirSync(podsDir)) {
+    const m = name.match(re);
+    if (m) max = Math.max(max, Number(m[1]));
+  }
+  return max + 1;
+}
+
+// Sets "KEY=value" in .env content — replacing an existing line for KEY
+// (commented or not, so defaulted-but-commented vars like RUNTIME_PORT get
+// turned on) or appending a new one if the key isn't present at all.
+function setEnvVar(content, key, value) {
+  const re = new RegExp(`^#?\\s*${key}=.*$`, "m");
+  const line = `${key}=${value}`;
+  if (re.test(content)) return content.replace(re, line);
+  return content.replace(/\n?$/, `\n${line}\n`);
+}
+
+// Reserves a block of 10 ports per pod index (room to grow beyond today's
+// two fixed-port vars without colliding with the next pod's block) and
+// rewrites both the KEY=value assignments and any literal "localhost:<port>"
+// reference elsewhere in the file that pointed at the main checkout's port.
+function rewritePodEnv(content, projectId, index) {
+  const vars = POD_PORT_VARS[projectId];
+  if (!vars?.length) return content;
+  const base = 5000 + (index - 1) * 10;
+  let out = content;
+  vars.forEach(({ key, default: def }, i) => {
+    const port = base + i;
+    out = setEnvVar(out, key, port);
+    if (def != null && def !== port) {
+      out = out.replaceAll(`localhost:${def}`, `localhost:${port}`);
+    }
+  });
+  return out;
+}
+
+function cmdPodCreate(project, { https }) {
+  const manifest = readManifest();
+  const repo = manifest.repos.find((r) => r.id === project);
+  const prefix = POD_PREFIXES[project];
+  if (!repo || !prefix) {
     console.error(
-      `pod create is not implemented yet. See CONCEPT.md#pods-isolated-checkouts-for-parallel-work ` +
-        `for the design (clone, .env port rewrite, dependency install for "${project}").`
+      `Unknown pod project "${project}" — expected one of: ${Object.keys(POD_PREFIXES).join(", ")}`
     );
     process.exitCode = 1;
+    return;
+  }
+
+  const index = nextPodIndex(prefix);
+  const podName = `${prefix}${index}`;
+  const podDir = join(ROOT, "pods", podName);
+  if (existsSync(podDir)) {
+    console.error(`${podDir} already exists — refusing to overwrite.`);
+    process.exitCode = 1;
+    return;
+  }
+
+  const url = https ? toHttps(repo.url) : repo.url;
+  console.log(`[${podName}] cloning ${repo.id} into pods/${podName}...`);
+  mkdirSync(dirname(podDir), { recursive: true });
+  git(["clone", url, podDir]);
+
+  const mainEnv = join(ROOT, repo.path, ".env");
+  const podEnv = join(podDir, ".env");
+  if (existsSync(mainEnv)) {
+    console.log(`[${podName}] copying .env from ${repo.path}/.env and rewriting ports...`);
+    const rewritten = rewritePodEnv(readFileSync(mainEnv, "utf8"), repo.id, index);
+    writeFileSync(podEnv, rewritten);
+  } else {
+    console.log(`[${podName}] no .env at ${repo.path}/.env — skipping .env setup.`);
+  }
+
+  if (existsSync(join(podDir, "package.json"))) {
+    console.log(`[${podName}] installing dependencies (pnpm install)...`);
+    execFileSync("pnpm", ["install"], { cwd: podDir, stdio: "inherit" });
+  }
+
+  console.log(`\n[${podName}] ready at pods/${podName}`);
+}
+
+function cmdPod(args) {
+  const [sub, project, ...rest] = args;
+  if (sub === "create" && project) {
+    cmdPodCreate(project, { https: rest.includes("--https") });
     return;
   }
   printUsage();
@@ -459,7 +561,9 @@ Usage:
                                      e.g. "kill-port 3000", "kill-port 3000-3002",
                                      "kill-port 3001 3002 4000"
                                      (default: 3000-3999, 4000-4999, 5000-5999)
-  workbench pod create <project>    Create an isolated pod checkout (not yet implemented)
+  workbench pod create <project> [--https]
+                                     Create an isolated pod checkout of "sovereign" or
+                                     "sovereign-os" (clone, .env port rewrite, pnpm install)
 `);
 }
 
