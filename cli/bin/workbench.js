@@ -544,6 +544,73 @@ function cmdPod(args) {
   process.exitCode = 1;
 }
 
+// "root" is this repo (sovereignfs/sovereignfs) itself, at ROOT — it's not
+// in workbench.manifest.json since it's not something `workbench init`
+// clones, but it's still a git checkout that can go stale mid-session.
+function clearTargets() {
+  const manifest = readManifest();
+  return [
+    { id: "root", path: ROOT },
+    ...manifest.repos.map((r) => ({ id: r.id, path: join(ROOT, r.path) })),
+  ];
+}
+
+// Stashes any local changes (including untracked) for safety, then resets
+// to a clean main. `git stash push` exits 0 with "No local changes to
+// save" when there's nothing to stash — not an error.
+function clearRepo(dir) {
+  git(["-C", dir, "stash", "push", "--include-untracked", "-m", "workbench clear"]);
+  git(["-C", dir, "checkout", "main"]);
+  git(["-C", dir, "pull", "--ff-only"]);
+}
+
+function cmdClear(args) {
+  const w = args.includes("--w") ? args[args.indexOf("--w") + 1] : undefined;
+  const targets = clearTargets();
+
+  if (w) {
+    const target = targets.find((t) => t.id === w);
+    if (!target) {
+      console.error(
+        `Unknown clear target "${w}" — expected one of: ${targets.map((t) => t.id).join(", ")}`
+      );
+      process.exitCode = 1;
+      return;
+    }
+    if (!existsSync(join(target.path, ".git"))) {
+      console.error(`[${target.id}] ${target.path} is not a git checkout — nothing to clear.`);
+      process.exitCode = 1;
+      return;
+    }
+    console.log(`[${target.id}] stashing local changes, switching to main, pulling...`);
+    clearRepo(target.path);
+    console.log(`\n[${target.id}] clean.`);
+    return;
+  }
+
+  const results = { ok: [], skipped: [], failed: [] };
+  for (const target of targets) {
+    if (!existsSync(join(target.path, ".git"))) {
+      results.skipped.push(target.id);
+      continue;
+    }
+    try {
+      console.log(`[${target.id}] stashing local changes, switching to main, pulling...`);
+      clearRepo(target.path);
+      results.ok.push(target.id);
+    } catch (err) {
+      console.error(`[${target.id}] failed: ${err.message}`);
+      results.failed.push(target.id);
+    }
+  }
+  console.log(
+    `\ndone: ${results.ok.length} ok, ${results.skipped.length} skipped, ${results.failed.length} failed` +
+      (results.skipped.length ? ` (skipped: ${results.skipped.join(", ")})` : "") +
+      (results.failed.length ? ` (failed: ${results.failed.join(", ")})` : "")
+  );
+  if (results.failed.length) process.exitCode = 1;
+}
+
 function printUsage() {
   console.log(`workbench — manage the sovereignfs ecosystem checkout
 
@@ -564,6 +631,10 @@ Usage:
   workbench pod create <project> [--https]
                                      Create an isolated pod checkout of "sovereign" or
                                      "sovereign-os" (clone, .env port rewrite, pnpm install)
+  workbench clear [--w <id>]        Reset checkout(s) to a clean main: stash local changes
+                                     for safety, checkout main, pull --ff-only.
+                                     No args clears root + every manifest repo; --w <id>
+                                     clears just one ("root", or a manifest repo id).
 `);
 }
 
@@ -587,6 +658,9 @@ switch (command) {
     break;
   case "pod":
     cmdPod(rest);
+    break;
+  case "clear":
+    cmdClear(rest);
     break;
   default:
     printUsage();

@@ -72,6 +72,21 @@ This kills whatever process is listening, full stop — it doesn't check
 which project owns it, so don't run it if you have unrelated work on those
 ports you want to keep alive.
 
+## Starting fresh
+
+Coming back after a working session and want every checkout back on a
+clean `main` before you start again?
+
+```sh
+./workbench.sh clear                # root + every repo in the manifest (incl. support/*)
+./workbench.sh clear --w sovereign   # just one — "root" or any manifest repo id
+```
+
+Per repo this stashes local changes (`git stash push --include-untracked`,
+so nothing's lost — just tucked away), checks out `main`, and
+`git pull --ff-only`s. Recover stashed work with `git stash pop` inside
+that repo.
+
 ## Local plugin development
 
 `sovereign` composes plugins cloned into `sovereign/plugins/<name>.local`.

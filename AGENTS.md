@@ -95,3 +95,11 @@ rather than treating a stale report as informational only.
   blocks tend to land). It doesn't check ownership before killing, so
   don't run it against specs with unrelated work you
   want to keep alive.
+- `workbench clear [--w <id>]` resets a checkout back to a clean main:
+  `git stash push --include-untracked` (safety net, not a discard — nothing
+  is lost), `git checkout main`, `git pull --ff-only`. With no args it runs
+  across `root` (this repo) plus every repo in the manifest, including
+  `support/*`; `--w <id>` scopes it to one (`--w sovereign`, `--w root`,
+  etc). Reach for it to start a session from a known-clean slate — it
+  won't touch anything not already committed or stashed, but a stash still
+  needs an explicit `git stash pop` to bring the work back.
