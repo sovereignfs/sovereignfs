@@ -1,6 +1,7 @@
 # Spawned by `workbench init` / `workbench pod create` — see workbench.manifest.json
 /sovereign/
 /sovereign-os/
+/sovereign-edge/
 /sovereign-desktop/
 /support/
 /pods/

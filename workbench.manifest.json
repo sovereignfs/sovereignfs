@@ -13,6 +13,12 @@
       "type": "os"
     },
     {
+      "id": "sovereign-edge",
+      "url": "git@github.com:sovereignfs/sovereign-edge.git",
+      "path": "sovereign-edge",
+      "type": "mobile"
+    },
+    {
       "id": "sovereign-desktop",
       "url": "git@github.com:sovereignfs/sovereign-desktop.git",
       "path": "sovereign-desktop",
