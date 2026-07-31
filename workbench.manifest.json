@@ -19,6 +19,12 @@
       "type": "mobile"
     },
     {
+      "id": "sovereign-mobile",
+      "url": "git@github.com:sovereignfs/sovereign-mobile.git",
+      "path": "sovereign-mobile",
+      "type": "mobile"
+    },
+    {
       "id": "sovereign-desktop",
       "url": "git@github.com:sovereignfs/sovereign-desktop.git",
       "path": "sovereign-desktop",

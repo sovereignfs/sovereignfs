@@ -16,6 +16,11 @@ One page per repo in [workbench.manifest.json](../workbench.manifest.json).
   codebase or features.
 - [sovereign-desktop](entities/sovereign-desktop.md) — Tauri-based native
   desktop shell that loads a user's Sovereign instance in a WebView.
+- [sovereign-mobile](entities/sovereign-mobile.md) — Capacitor-based native
+  mobile shell (iOS + Android), same pattern as sovereign-desktop, plus a
+  device-bridge layer for `sdk.device.*`. Repo created and pushed to
+  GitHub; shell scaffold (epic task 20.1) in progress, verified on iOS
+  Simulator, Android not yet compile-verified.
 - [sovereign-infra](entities/sovereign-infra.md) — operator-facing VPS
   deployment template (Caddy + Docker Compose + age-encrypted secrets)
   for self-hosting `sovereign`.
@@ -53,5 +58,7 @@ Repos mentioned in entity pages but not in
 [workbench.manifest.json](../workbench.manifest.json) or this confluence
 yet: `sovereign-tasks`, `sovereign-plainwrite` (default bundled product
 plugins), `storybook` (UI docs site), `sovereign-legacy` (archived),
-`sovereign-mobile` (planned, not yet built). Add entity pages once they're
-either added to the manifest or become relevant to an ecosystem question.
+`sovereign-edge` (React Native standalone AI app — has an entity in the
+manifest but no confluence page yet; not to be confused with
+`sovereign-mobile`, above). Add entity pages once they become relevant to
+an ecosystem question.

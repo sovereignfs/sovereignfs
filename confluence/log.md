@@ -75,3 +75,57 @@ checkout: `p1` got 5000/5001, a second pod correctly got `p2` at
 5010/5011. `sovereign-os` has no `.env`/`package.json` today, so its pods
 just clone — the port-var map (`POD_PORT_VARS` in `cli/bin/workbench.js`)
 is keyed per project id so that's a one-line addition if that changes.
+
+## [2026-07-31] ingest | sovereign-mobile planning docs + entity page
+
+`sovereign-mobile/` went from an empty placeholder directory to a full
+docs-only checkout: `CONCEPT.md`, `ROADMAP.md`, `AGENTS.md`/`CLAUDE.md`,
+`CONTRIBUTING.md`, `docs/development-workflow.md`, and
+`docs/{epics,adrs,research}/`, built from `sovereign`'s RFC 0058 (shell),
+RFC 0083 (device bridge), RFC 0080 (surface model), epic 20, and workstream
+0002 — plus the developer's own restated requirement (bridge layer for
+`sdk.device.*`, native-only PWA features, self-hosting instance-URL
+support), cross-checked against those sources and found consistent, not
+contradictory. Wrote `entities/sovereign-mobile.md` and added it to
+`index.md`.
+
+Deliberately did **not** add `sovereign-mobile` to
+`workbench.manifest.json` — the checkout has content but no `.git` and no
+GitHub remote yet, so `workbench init`'s `cloneOrPull` would fail on it
+(non-empty destination, then no remote to clone from). Add it once the
+repo is `git init`-ed and pushed. Noted `sovereign-edge` as a fresh gap in
+the opposite direction: it's already in the manifest (added in a separate,
+earlier change) but still has no confluence entity page.
+
+## [2026-07-31] ingest | sovereign-mobile: task 20.1 scaffold, repo pushed, manifest entry
+
+Same day, follow-on to the entry above. `sovereign-mobile` gained a real
+Capacitor shell scaffold (epic task 20.1): onboarding/instance-persistence/
+boot-flow logic ported from `sovereign-desktop`, committed iOS and Android
+native projects, and two new ADRs (0006, 0007) for the mobile-specific
+pieces desktop's OS-menu model doesn't cover (history-based instance
+switching, native navigation-policy enforcement). Verified building,
+installing, and launching on iOS Simulator (screenshot-confirmed, two
+device instances) — catching and fixing two real native bugs along the way
+(an unregistered Xcode source file, an ambiguous `WKNavigationDelegate`
+overload). Android is written against real Capacitor Android sources but
+not compile-verified: this build environment has JDK 17, Capacitor Android
+8 requires JDK 21+.
+
+The repo was then `git init`-ed, committed directly to `main`, and pushed
+to `sovereignfs/sovereign-mobile` on GitHub — the precondition the previous
+entry's manifest exception was waiting on. Added it to
+`workbench.manifest.json` (fixing a copy-paste bug found in the process:
+the entry had been drafted with `"id": "sovereign-edge"`, duplicating the
+existing entry instead of reading `"sovereign-mobile"` — id collisions like
+this would break anything keying off `id`, e.g. `POD_PORT_VARS` lookups).
+Added the matching `/sovereign-mobile/` line to root `.gitignore`,
+consistent with the other nested-repo entries. Updated
+`entities/sovereign-mobile.md` and `index.md` to drop the now-stale
+"docs-only, not in manifest" framing rather than leave it contradicting the
+manifest change in the same commit.
+
+Left as a known follow-up, not fixed here: `sovereign` monorepo's
+`docs/repositories.md` still lists `sovereign-mobile` as "Not yet created"
+— that's now stale and needs correcting on `sovereign`'s own next ingest
+pass, not this one.
