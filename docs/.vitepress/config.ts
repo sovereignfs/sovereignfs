@@ -90,29 +90,42 @@ export default defineConfig({
   srcDir: '.fetched/docs',
   outDir: '.vitepress/dist',
   rewrites: publicGuideRewrites,
-  // sovereign-os's docs corpus is only partially mirrored (product/rfcs/adrs/
-  // roadmap, per docs-sync.manifest.json) — its own content cross-links into
-  // directories we deliberately don't fetch (roadmap/, research/, design/,
-  // templates/, update/), and ROADMAP.md's relative links assume a "docs/"
-  // prefix that doesn't apply to our flattened /sovereign-os/ URL structure.
-  // These are genuinely unreachable in this curated subset, not a bug.
+  // Every source repo's docs corpus is only partially mirrored, per
+  // docs-sync.manifest.json's curated path list — each repo's own content
+  // freely cross-links into directories/files we deliberately don't fetch
+  // (workstreams/, epics/, example-plugins/, registry/, operations/,
+  // update/, root CLAUDE.md, etc.), and numbered-doc collections assume a
+  // "docs/" prefix or sibling nesting that doesn't survive our flattened
+  // per-repo URL structure (/sovereign-os/*, /sovereign-edge/*). These are
+  // genuinely unreachable in each curated subset, not a bug — but see the
+  // "Docs" GitHub Actions workflow's push-to-main trigger (added after this
+  // exact class of link went unnoticed until an actual deploy run): every
+  // list below should have been verified against a real `vitepress build`
+  // — as this comment's history was not — before assuming a pattern here
+  // actually matches anything. `pnpm --filter @sovereignfs/docs build`
+  // (after a `workbench docs fetch`) is the only reliable way to check.
   //
-  // sovereign-edge's docs/epics/ and docs/research/ files link two levels up
-  // to root CONCEPT.md/ROADMAP.md (e.g. "../../CONCEPT.md") — those map to
-  // /sovereign-edge/concept.md and /sovereign-edge/roadmap.md here, not a
-  // same-named file two directories up, so they're unreachable by relative
-  // path in this flattened structure too. Its research docs also link to a
-  // bare "../epics/" directory (no index.md there, only README.md), and
-  // ROADMAP.md itself links to a sibling "CONCEPT.md" (fetched as the
-  // differently-named roadmap.md/concept.md pair, so that breaks too).
+  // sovereign's own docs:
   ignoreDeadLinks: [
-    /^\.\/\.\.\/(roadmap|research|design|templates)\//,
-    /^\.\/\.\.\/\.\.\/update\//,
     /^\.\/docs\//,
+    /^\.\/\.\.\/CLAUDE$/, // repositories.md -> root CLAUDE.md
+    /^\.\/\.\.\/example-plugins\//, // plugin-development.md -> example-plugins/
+    /^\.\/\.\.\/registry\//, // repositories.md -> registry/CONTRIBUTING.md
+    /^\.\/workstreams\//, // development-workflow.md, repositories.md -> docs/workstreams/*
+    /^\.\/\.\.\/workstreams\//, // rfcs/* -> docs/workstreams/*
+    /^\.\/\.\.\/epics\//, // rfcs/* -> docs/epics/* (sovereign's own, unrelated to sovereign-edge's epics/)
+    // sovereign-os's own docs — cross-links into directories/files outside
+    // the curated product/rfcs/adrs/roadmap/concept subset:
+    /^\.\/\.\.\/(roadmap|research|design|templates)\//,
+    /^\.\/\.\.\/operations\//, // adrs/* -> docs/operations/*
+    /^\.\/update\//, // roadmap.md (repo-root-level) -> sibling update/*
+    /^\.\/\.\.\/\.\.\/update\//, // rfcs/* (nested one level deeper) -> update/*
+    // sovereign-edge's own docs — epics/research link two levels up to root
+    // CONCEPT.md/ROADMAP.md, which map here to differently-named
+    // concept.md/roadmap.md, not a same-named file two directories up:
     /^\.\/\.\.\/\.\.\/CONCEPT/,
     /^\.\/\.\.\/\.\.\/ROADMAP/,
-    /^\.\/\.\.\/epics\/index/,
-    /^\.\/CONCEPT$/,
+    /^\.\/CONCEPT$/, // roadmap.md -> sibling CONCEPT.md
   ],
   transformHead({ pageData, title, description }) {
     const canonicalUrl = `${siteUrl}${pagePath(pageData.relativePath)}`;

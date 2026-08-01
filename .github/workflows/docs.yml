@@ -10,9 +10,24 @@ on:
       - 'workbench.manifest.json'
       - '.github/workflows/docs.yml'
   push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'cli/bin/workbench.js'
+      - 'workbench.manifest.json'
+      - '.github/workflows/docs.yml'
     tags:
       - 'docs-v*'
-  workflow_dispatch: # manually publish the current selected ref
+  # Content is fetched fresh from sovereign/sovereign-os/sovereign-edge at
+  # build time (not pinned) — a PR or push here can pass, then a later
+  # upstream commit in one of those repos makes the *next* deploy fail with
+  # no PR of ours to catch it (this is exactly how the 2026-08 dead-link
+  # incident reached an actual deploy run unnoticed: every source of drift
+  # was upstream, not in this repo's own diff). A daily schedule surfaces
+  # that drift within a day instead of at the next manual deploy.
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch: # manually publish the current selected ref, or run this build check on demand
 
 concurrency:
   group: docs-${{ github.ref }}
@@ -29,10 +44,18 @@ jobs:
   build:
     name: Build docs
     runs-on: ubuntu-latest
+    # Runs on: a PR touching the paths above (unless draft/skip-ci); a
+    # direct push to main touching those same paths (the "no PR" path this
+    # repo's own workflow allows — see AGENTS.md); and the daily schedule,
+    # which re-fetches and rebuilds regardless of whether anything changed
+    # here, to catch drift originating entirely in the upstream repos.
     if: >-
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.draft == false &&
-      !contains(github.event.pull_request.labels.*.name, 'skip-ci')
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.draft == false &&
+       !contains(github.event.pull_request.labels.*.name, 'skip-ci')) ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
 
     steps:
       - uses: actions/checkout@v4
