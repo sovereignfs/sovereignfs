@@ -34,6 +34,25 @@
   align-items: center;
 }
 
+/* Narrower second column than .sv-hero-grid — sized for the phone-frame
+   mockup rather than the wide browser-window one. */
+.sv-edge-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(296px, 0.5fr);
+  gap: 64px;
+  align-items: center;
+}
+
+/* Narrower second column than .sv-hero-grid too — leaves the copy column
+   enough room for the "Sovereign OS" h1 to stay on one line, the way
+   "Sovereign"/"Sovereign Edge" do in the other two hero grids. */
+.sv-os-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(460px, 0.85fr);
+  gap: 64px;
+  align-items: start;
+}
+
 .sv-eyebrow {
   margin: 0 0 14px;
   color: var(--sv-accent);
@@ -325,6 +344,367 @@
   background: #f3d6cf;
 }
 
+/* Console dashboard — single-column status overview (Sovereign OS), as
+   opposed to the sidebar + app-tile launcher .sv-workspace represents. */
+.sv-console {
+  overflow: hidden;
+  color: #17211b;
+  border: 1px solid #c7cec8;
+  border-radius: 8px;
+  background: #f8f8f8;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.13);
+}
+
+.sv-console-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #d9dfd9;
+}
+
+.sv-console-topbar .sv-brand-mark {
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+}
+
+.sv-console-topbar strong {
+  font-size: 13px;
+}
+
+.sv-console-version {
+  margin-left: auto;
+  color: #68736b;
+  font-size: 11px;
+}
+
+.sv-console-main {
+  padding: 22px 24px;
+}
+
+.sv-console-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.sv-console-header-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sv-console-eyebrow {
+  color: #2f8f5b;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.sv-console-header strong {
+  font-size: 21px;
+}
+
+.sv-console-header-copy > span:last-child {
+  color: #68736b;
+  font-size: 12px;
+}
+
+.sv-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.sv-stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #d9dfd9;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.sv-stat-label {
+  overflow: hidden;
+  color: #68736b;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sv-stat-tile strong {
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sv-stat-caption {
+  overflow: hidden;
+  color: #68736b;
+  font-size: 9.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sv-check-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.sv-check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e3e7e3;
+}
+
+.sv-check-row:last-child {
+  border-bottom: 0;
+}
+
+.sv-check-dot {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2f8f5b;
+}
+
+.sv-check-row strong {
+  flex-shrink: 0;
+  font-size: 12.5px;
+}
+
+.sv-check-row > span:last-child {
+  overflow: hidden;
+  color: #68736b;
+  font-size: 11px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.sv-app-icon svg {
+  width: 19px;
+  height: 19px;
+  stroke: #17211b;
+}
+
+/* Status chip — small "online"/"on-device" indicator, used in place of a
+   per-user avatar on product pages with no signed-in identity to show. */
+.sv-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  color: #68736b;
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+  border: 1px solid #c7cec8;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.sv-status-chip::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  content: '';
+  background: currentColor;
+}
+
+.sv-status-chip-online {
+  color: #2f8f5b;
+}
+
+.sv-status-chip-offline {
+  color: #3d6f9c;
+}
+
+/* Compact circular variant of the status chip, sized to drop into the same
+   34px sidebar/mobile-nav slot the avatar circle otherwise occupies. */
+.sv-status-dot {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #eaf4ee;
+}
+
+.sv-status-dot::before {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  content: '';
+  background: #2f8f5b;
+}
+
+.sv-workspace-mobile-header .sv-status-dot {
+  width: 28px;
+  height: 28px;
+  margin-left: auto;
+}
+
+/* Phone-frame mockup — used by products that are mobile-only (no desktop/
+   browser surface), so a device silhouette is the honest representation
+   instead of the browser-window chrome the other mockups use. */
+.sv-phone-figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.sv-phone-figure figcaption {
+  max-width: 320px;
+  margin: 12px auto 0;
+  color: #707a73;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.sv-phone-shell {
+  display: flex;
+  justify-content: center;
+}
+
+.sv-phone {
+  width: 296px;
+  padding: 14px 10px;
+  border: 1px solid #c7cec8;
+  border-radius: 34px;
+  background: #17211b;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.13);
+}
+
+.sv-phone-notch {
+  width: 70px;
+  height: 5px;
+  margin: 0 auto 10px;
+  border-radius: 999px;
+  background: #3a423c;
+}
+
+.sv-phone-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 460px;
+  overflow: hidden;
+  color: #17211b;
+  border-radius: 22px;
+  background: #f8f8f8;
+}
+
+.sv-phone-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #d9dfd9;
+}
+
+.sv-phone-header strong {
+  font-size: 14px;
+}
+
+.sv-phone-header .sv-status-chip {
+  margin-left: auto;
+}
+
+.sv-chat-thread {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 14px;
+}
+
+.sv-chat-bubble {
+  max-width: 84%;
+  padding: 10px 13px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  border-radius: 14px;
+}
+
+.sv-chat-bubble-user {
+  align-self: flex-end;
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+  background: #17211b;
+}
+
+.sv-chat-bubble-assistant {
+  align-self: flex-start;
+  color: #17211b;
+  border-bottom-left-radius: 4px;
+  background: #ffffff;
+  border: 1px solid #d9dfd9;
+}
+
+.sv-chat-provenance {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 2px;
+  padding: 4px 9px;
+  color: #3d6f9c;
+  font-size: 10px;
+  font-weight: 650;
+  border-radius: 999px;
+  background: #d8eaf1;
+}
+
+.sv-phone-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border-top: 1px solid #d9dfd9;
+}
+
+.sv-phone-input-placeholder {
+  flex: 1;
+  padding: 8px 12px;
+  color: #9aa39c;
+  font-size: 12px;
+  border: 1px solid #c7cec8;
+  border-radius: 999px;
+  background: #f8f8f8;
+}
+
+.sv-phone-send {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: #ffffff;
+  border-radius: 50%;
+  background: #17211b;
+}
+
+.sv-phone-send svg {
+  width: 14px;
+  height: 14px;
+  stroke: #ffffff;
+}
+
 .sv-proof {
   background: #ffffff;
   border-bottom: 1px solid var(--sv-line);
@@ -609,6 +989,8 @@
 
 @media (max-width: 1000px) {
   .sv-hero-grid,
+  .sv-edge-hero-grid,
+  .sv-os-hero-grid,
   .sv-builder-grid,
   .sv-instance-grid {
     grid-template-columns: 1fr;
@@ -617,6 +999,11 @@
 
   .sv-workspace-figure {
     max-width: 760px;
+  }
+
+  .sv-phone-figure {
+    max-width: 296px;
+    margin: 0 auto;
   }
 }
 
@@ -777,6 +1164,43 @@
   }
 
   .sv-workspace-figure {
+    margin-bottom: 40px;
+  }
+
+  .sv-console {
+    min-height: 0;
+  }
+
+  .sv-console-main {
+    padding: 16px;
+  }
+
+  .sv-console-header strong {
+    font-size: 18px;
+  }
+
+  .sv-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 14px;
+  }
+
+  .sv-check-row strong {
+    font-size: 12px;
+  }
+
+  .sv-check-row > span:last-child {
+    max-width: 40%;
+  }
+
+  .sv-phone {
+    width: min(100%, 260px);
+  }
+
+  .sv-phone-screen {
+    min-height: 400px;
+  }
+
+  .sv-phone-figure {
     margin-bottom: 40px;
   }
 

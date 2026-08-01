@@ -1,7 +1,7 @@
 <template>
   <main class="sv-home">
     <section class="sv-hero">
-      <div class="sv-shell">
+      <div class="sv-shell sv-edge-hero-grid">
         <div class="sv-hero-copy">
           <p class="sv-eyebrow">Fully offline AI companion</p>
           <h1>Sovereign Edge</h1>
@@ -30,6 +30,48 @@
             <a class="sv-action sv-action-link" href="/">← Sovereign</a>
           </div>
         </div>
+
+        <figure class="sv-phone-figure">
+          <div class="sv-phone-shell">
+            <div class="sv-phone" aria-label="Sovereign Edge chat, mocked up for illustration">
+              <div class="sv-phone-notch" aria-hidden="true"></div>
+              <div class="sv-phone-screen">
+                <header class="sv-phone-header" aria-hidden="true">
+                  <span class="sv-brand-mark">E</span>
+                  <strong>Sovereign Edge</strong>
+                  <span class="sv-status-chip sv-status-chip-offline">On-device</span>
+                </header>
+                <div class="sv-chat-thread" aria-hidden="true">
+                  <p class="sv-chat-bubble sv-chat-bubble-user">
+                    Any good picnic spots near me this weekend?
+                  </p>
+                  <p class="sv-chat-bubble sv-chat-bubble-assistant">
+                    A few parks nearby have decent forecasts this weekend —
+                    here are the closest ones with details.
+                  </p>
+                  <span class="sv-chat-provenance">Answered via Search connector</span>
+                  <p class="sv-chat-bubble sv-chat-bubble-assistant">
+                    Want me to draft a short packing list too? That part I can
+                    do fully offline.
+                  </p>
+                </div>
+                <div class="sv-phone-input">
+                  <span class="sv-phone-input-placeholder">Ask anything…</span>
+                  <span class="sv-phone-send">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 12h14" />
+                      <path d="M13 6l6 6-6 6" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <figcaption>
+            A preview of the Sovereign Edge chat, shown with a sample offline conversation and a
+            Search connector reply.
+          </figcaption>
+        </figure>
       </div>
     </section>
 
