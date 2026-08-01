@@ -129,3 +129,28 @@ Left as a known follow-up, not fixed here: `sovereign` monorepo's
 `docs/repositories.md` still lists `sovereign-mobile` as "Not yet created"
 — that's now stale and needs correcting on `sovereign`'s own next ingest
 pass, not this one.
+
+## [2026-08-01] correction | plugin repo naming convention
+
+Developer renamed plugin repos ecosystem-wide from `sovereign-<plugin-name>`
+to `sovereign-plugin-<plugin-name>`. `sovereign-tasks` and
+`sovereign-plainwrite` — referenced in `index.md`'s Gaps section and
+`entities/sovereign.md`, still unmapped (not in
+`workbench.manifest.json`) — are now `sovereign-plugin-tasks` and
+`sovereign-plugin-plainwrite`; updated both mentions to match.
+`sovereign-legacy` (archived prior codebase, also in the Gaps list) was
+left alone — not a plugin, outside this convention.
+
+`sovereign-plugins-examples` is not a rename: the developer deleted that
+repo outright and folded its example plugins directly into `sovereign`'s
+own `plugins/` workspace (`plugins/example-basic/`, `plugins/example-api/`,
+etc., alongside the existing `plugins/console/`, `plugins/launcher/`,
+`plugins/account/`). Deleted its entity page
+(`entities/sovereign-plugins-examples.md`) and updated every
+cross-reference to it (`index.md`, `SCHEMA.md`,
+`concepts/plugin-development.md`, `entities/sovereign.md`,
+`entities/sovereign-plugin-template.md`) to describe it as merged into
+`sovereign` rather than link to a page that no longer exists. This repo's
+own `workbench.manifest.json` already had `sovereign-plugin-template`
+under the new convention and had the plugins-examples entry removed in a
+prior commit, so no manifest change was needed here.

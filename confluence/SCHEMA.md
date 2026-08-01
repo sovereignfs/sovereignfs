@@ -33,8 +33,7 @@ confluence/
 │   ├── sovereign-os.md
 │   ├── sovereign-desktop.md
 │   ├── sovereign-infra.md
-│   ├── sovereign-plugin-template.md
-│   └── sovereign-plugins-examples.md
+│   └── sovereign-plugin-template.md
 ├── concepts/           # cross-cutting ideas that span multiple repos
 │   ├── two-repo-deploy-model.md
 │   ├── plugin-development.md

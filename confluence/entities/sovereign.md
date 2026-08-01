@@ -47,12 +47,17 @@ at time of writing), targeting a v1.0.0 public release milestone.
   bridge, generated route registry
 - `plugins/console/`, `plugins/launcher/`, `plugins/account/` — built-in
   platform-type plugins (admin console, home screen, profile)
+- `plugins/example-basic/`, `plugins/example-api/`,
+  `plugins/example-minimal/`, `plugins/example-monetized/`,
+  `plugins/example-overlay-*/` — first-party reference plugins folded in
+  directly from the now-deleted `sovereign-plugins-examples` repo, rather
+  than cloned in at build time
 - `registry/` — public plugin index (`plugins.json`) + submission process
 - `scripts/` — install-plugins, generate-registry, dev orchestrator
 - `bin/sv` — the `sv` CLI wrapping common tasks
 - `docker/`, `Dockerfile`, `docker-compose*.yml` — self-host deployment
 - `sovereign.plugins.json` — declares which product plugins to clone
-  (e.g. sovereign-tasks, sovereign-plainwrite, plus examples)
+  (e.g. sovereign-plugin-tasks, sovereign-plugin-plainwrite)
 
 ## Documentation conventions
 
@@ -77,9 +82,7 @@ Summary as of this ingest:
 
 - [sovereign-plugin-template](sovereign-plugin-template.md) — standalone
   starter for third-party plugins
-- [sovereign-plugins-examples](sovereign-plugins-examples.md) — bundled
-  first-party example plugins
-- `sovereign-tasks`, `sovereign-plainwrite` — default bundled,
+- `sovereign-plugin-tasks`, `sovereign-plugin-plainwrite` — default bundled,
   independently-versioned product plugins (not yet mapped in this
   confluence — not in `workbench.manifest.json`)
 - `storybook` — deployed UI docs site, source lives in this repo (not yet

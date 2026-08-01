@@ -12,5 +12,5 @@
 # Blank lines and "#" comments (whole-line or trailing) are ignored.
 
 # Plugins I'm actively developing
-git@github.com:sovereignfs/sovereign-tasks.git
-notes git@github.com:me/plugin-notes.git
+git@github.com:sovereignfs/sovereign-plugin-tasks.git
+notes git@github.com:me/plugin-plugin-docs.git

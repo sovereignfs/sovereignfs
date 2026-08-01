@@ -26,8 +26,11 @@ One page per repo in [workbench.manifest.json](../workbench.manifest.json).
   for self-hosting `sovereign`.
 - [sovereign-plugin-template](entities/sovereign-plugin-template.md) —
   GitHub template for scaffolding a new third-party Sovereign plugin.
-- [sovereign-plugins-examples](entities/sovereign-plugins-examples.md) —
-  first-party reference plugins covering each manifest capability.
+
+`sovereign-plugins-examples` (first-party reference plugins) used to have
+its own entity page here; the repo was deleted and its plugins folded
+directly into `sovereign`'s `plugins/` workspace — see
+[sovereign](entities/sovereign.md).
 
 ## Concepts
 
@@ -37,8 +40,8 @@ Cross-cutting ideas that span more than one repo.
   `sovereign` (Provider) and `sovereign-infra` (Operator) split
   build/release from deploy/operate.
 - [plugin-development](concepts/plugin-development.md) — how plugin
-  authoring, reference examples, and installation into a runtime checkout
-  fit together across repos.
+  authoring, first-party reference examples (now inside `sovereign`
+  itself), and installation into a runtime checkout fit together.
 - [cross-repo-conventions](concepts/cross-repo-conventions.md) — why
   documentation numbering (RFCs, ADRs, SRS) and AI-agent commit
   conventions differ per repo, and don't transfer between them.
@@ -56,7 +59,7 @@ Numbered decision records, append-only history — see
 
 Repos mentioned in entity pages but not in
 [workbench.manifest.json](../workbench.manifest.json) or this confluence
-yet: `sovereign-tasks`, `sovereign-plainwrite` (default bundled product
+yet: `sovereign-plugin-tasks`, `sovereign-plugin-plainwrite` (default bundled product
 plugins), `storybook` (UI docs site), `sovereign-legacy` (archived),
 `sovereign-edge` (React Native standalone AI app — has an entity in the
 manifest but no confluence page yet; not to be confused with

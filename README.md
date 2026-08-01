@@ -25,7 +25,7 @@ sovereignfs/
 ├── sovereign/           # Sovereign Workspace Runtime
 ├── sovereign-os/        # Sovereign OS
 ├── sovereign-desktop/   # Desktop app for Sovereign Workspace Runtime
-├── support/             # sovereign-infra, sovereign-plugins-examples, sovereign-plugin-template
+├── support/             # sovereign-infra, sovereign-plugin-template
 └── pods/                # created on demand, see below
 ```
 
