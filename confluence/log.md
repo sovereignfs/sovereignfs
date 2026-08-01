@@ -154,3 +154,49 @@ cross-reference to it (`index.md`, `SCHEMA.md`,
 own `workbench.manifest.json` already had `sovereign-plugin-template`
 under the new convention and had the plugins-examples entry removed in a
 prior commit, so no manifest change was needed here.
+
+## [2026-08-01] correction | example plugins actually landed in example-plugins/, not plugins/
+
+The previous entry in this log (and the confluence pages it updated) said
+the deleted `sovereign-plugins-examples` repo's plugins were "folded
+directly into `sovereign`'s `plugins/` workspace." Wrong — cloning
+`sovereign` and reading its own `docs/adhoc/example-plugins-plan.md` and
+`docs/repositories.md` shows they landed in a **new, git-tracked
+`example-plugins/` directory, a sibling of `plugins/`**, composed into a
+build only when `SOVEREIGN_EXAMPLES_ENABLED` is set (off by default).
+Corrected `entities/sovereign.md`, `entities/sovereign-plugin-template.md`,
+`concepts/plugin-development.md`, and `index.md` to describe this
+accurately instead of repeating the earlier guess.
+
+Also used this pass to close several other gaps found by actually reading
+`sovereign`'s own `docs/repositories.md` (its canonical repo map) and the
+11 plugin repos now cloned locally as personal `.local` dev checkouts
+under `sovereign/plugins/`:
+
+- `registry/plugins.json` (`sovereign`'s plugin submission registry) is
+  currently empty — no product/community plugin has actually been
+  published through it, despite the SRS's "Tasks, Plainwrite"
+  default-bundled framing. `sovereign.plugins.json` (build-time external
+  plugin clone list) is likewise empty by default.
+- Confirmed `sovereign-legacy`, `storybook`, and `sovereignfs.github.io`
+  as real, active `sovereignfs/`-owned repos per `docs/repositories.md`
+  (previously listed in this confluence's Gaps section without that
+  confirmation).
+- Listed all 11 plugin repos found cloned locally
+  (`docs`, `healthlog`, `ledger`, `papertrail`, `plainwrite`, `sheets`,
+  `shopper`, `tally`, `tasks`, `tritext`, `wallet`) in `index.md`'s Gaps
+  section — only `tasks` and `plainwrite` are referenced anywhere in
+  `sovereign`'s own docs as default-bundled; the other nine appear to be
+  personal/in-development plugins with no documented product status yet.
+  Noted (not flagged as a problem) that each plugin's in-tree
+  `package.json` name still uses the pre-rename `sovereign-<name>` form —
+  per `sovereign`'s own naming notes, repo name/package name/manifest id
+  are independent, so this isn't drift.
+- Also recorded, in `entities/sovereign.md`, the 2026-08-01 Dockerfile fix
+  to the app-builder's plugin-staging `RUN` step (a bare `[ -d ... ] && cp`
+  as a function's last statement made the whole step fail whenever the
+  alphabetically-last `plugins/*/` dir lacked a `migrations/` folder) and
+  the workbench CLI's plugin `.local` dir naming change (drops the
+  `plugin-` segment when auto-deriving from a URL).
+- Bumped `entities/sovereign.md`'s stated platform version from the stale
+  0.44.x to the current 0.53.x.

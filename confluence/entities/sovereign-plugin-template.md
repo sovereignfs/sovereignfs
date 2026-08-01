@@ -53,8 +53,8 @@ Consumed by `sovereign`'s plugin-installation mechanism
 developer clones/uses-as-template to author a brand-new third-party
 (`community`) plugin. Shares the identical file shape (`manifest.json` +
 `app/` + `package.json` + `icon.svg`) with the first-party example
-plugins now living directly in `sovereign`'s own `plugins/` workspace
-(formerly a separate `sovereign-plugins-examples` repo, since deleted —
-see [sovereign](sovereign.md) and
-[plugin-development](../concepts/plugin-development.md)), since both
-are built to be dropped into `sovereign/plugins/`.
+plugins in `sovereign`'s own git-tracked `example-plugins/` directory
+(a sibling of `plugins/`, formerly a separate `sovereign-plugins-examples`
+repo cloned at build time, deleted 2026-08-01 — see [sovereign](sovereign.md)
+and [plugin-development](../concepts/plugin-development.md)), since both
+are built to be dropped into `sovereign/plugins/<name>.local`.
