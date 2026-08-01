@@ -76,6 +76,10 @@ function cmdInit(args) {
 // Parses sovereign.plugins.local: one entry per line, blank lines and
 // "#" comments (whole-line or trailing) ignored. Each line is either
 // "<git-url>" (name derived from the repo) or "<name> <git-url>".
+//
+// Repo names follow the `sovereign-plugin-<plugin-name>` convention, but
+// the derived local dir drops the "plugin-" segment, e.g.
+// `sovereign-plugin-tasks` -> `sovereign-tasks.local`.
 function parsePluginsLocal(raw) {
   const entries = [];
   for (const rawLine of raw.split("\n")) {
@@ -87,7 +91,10 @@ function parsePluginsLocal(raw) {
       [name, url] = parts;
     } else {
       url = parts[0];
-      name = url.replace(/^.*\//, "").replace(/\.git$/, "");
+      name = url
+        .replace(/^.*\//, "")
+        .replace(/\.git$/, "")
+        .replace(/^sovereign-plugin-/, "sovereign-");
     }
     entries.push({ name, url });
   }
@@ -618,7 +625,9 @@ Usage:
   workbench init [--https]          Clone/pull every repo in workbench.manifest.json
                                      (SSH by default; --https uses https://github.com/... instead)
   workbench plugins pull            Clone the repos listed in sovereign.plugins.local
-                                     into sovereign/plugins/<name>.local
+                                     into sovereign/plugins/<name>.local (name derived
+                                     from a sovereign-plugin-<x> repo drops "plugin-",
+                                     e.g. sovereign-plugin-tasks -> sovereign-tasks.local)
   workbench confluence lint         Report entity pages whose source repo has newer
                                      commits than the page's "updated" date
   workbench confluence sync         Same as lint, but "git pull"s each mapped repo first

@@ -7,8 +7,10 @@
 # plugins pull` to clone every listed repo into sovereign/plugins/<name>.local.
 #
 # Format, one entry per line:
-#   <git-url>          → cloned to sovereign/plugins/<repo-name>.local
-#   <name> <git-url>   → cloned to sovereign/plugins/<name>.local
+#   <git-url>          → cloned to sovereign/plugins/<derived-name>.local
+#                        (repo name has its "plugin-" segment dropped, e.g.
+#                        sovereign-plugin-tasks → sovereign-tasks.local)
+#   <name> <git-url>   → cloned to sovereign/plugins/<name>.local, verbatim
 # Blank lines and "#" comments (whole-line or trailing) are ignored.
 
 # Plugins I'm actively developing
