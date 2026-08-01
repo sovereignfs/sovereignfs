@@ -81,6 +81,18 @@ rather than treating a stale report as informational only.
   `apps/docs/.vitepress/publication.ts`'s runtime allowlist/denylist logic
   in `sovereign`) rather than editing `sovereign`'s doc structure to "make
   something public."
+- **Every change under `docs/` requires a version bump in `docs/package.json`,
+  in the same commit** — theme/component edits (`docs/.vitepress/theme/`),
+  config (`docs/.vitepress/config.ts`, `publication.ts`), the sync manifest,
+  or anything else in `docs/`. This is the site's own release train,
+  independent of the root workbench version and of `sovereign`'s/
+  `sovereign-os`'s own versioning — the deploy workflow
+  (`.github/workflows/docs.yml`) publishes to
+  `sovereignfs/sovereignfs.github.io` on a `docs-vX.Y.Z` tag push (or
+  manual dispatch), and that tag should match `docs/package.json`'s
+  version. Follow the same `fix/`→patch, `feat/`→minor semver split
+  `sovereign`'s own `CLAUDE.md` uses; bump first, then tag when actually
+  ready to deploy — don't let commits accumulate against a stale version.
 - `sovereign`'s own `setup.sh` is retired in favor of this repo's CLI. Its
   plugin-clone step moved here as `workbench plugins pull`, reading
   `sovereign.plugins.local` from this repo's root instead of `sovereign`'s.
