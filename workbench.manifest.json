@@ -37,12 +37,6 @@
       "type": "support"
     },
     {
-      "id": "sovereign-plugins-examples",
-      "url": "git@github.com:sovereignfs/sovereign-plugins-examples.git",
-      "path": "support/sovereign-plugins-examples",
-      "type": "support"
-    },
-    {
       "id": "sovereign-plugin-template",
       "url": "git@github.com:sovereignfs/sovereign-plugin-template.git",
       "path": "support/sovereign-plugin-template",
