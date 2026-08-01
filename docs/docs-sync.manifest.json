@@ -41,6 +41,17 @@
         { "from": "ROADMAP.md", "to": "sovereign-os/roadmap.md" },
         { "from": "CONCEPT.md", "to": "sovereign-os/concept.md" }
       ]
+    },
+    {
+      "id": "sovereign-edge",
+      "repo": "sovereign-edge",
+      "paths": [
+        { "from": "docs/epics", "to": "sovereign-edge/epics" },
+        { "from": "docs/research", "to": "sovereign-edge/research" },
+        { "from": "docs/development-workflow.md", "to": "sovereign-edge/development-workflow.md" },
+        { "from": "ROADMAP.md", "to": "sovereign-edge/roadmap.md" },
+        { "from": "CONCEPT.md", "to": "sovereign-edge/concept.md" }
+      ]
     }
   ]
 }

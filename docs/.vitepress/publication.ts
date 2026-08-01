@@ -6,6 +6,7 @@ const fetchedRoot = fileURLToPath(new URL('../.fetched/docs/', import.meta.url))
 const rfcsDir = path.join(fetchedRoot, 'rfcs');
 const sovereignOsRfcsDir = path.join(fetchedRoot, 'sovereign-os', 'rfcs');
 const sovereignOsAdrsDir = path.join(fetchedRoot, 'sovereign-os', 'adrs');
+const sovereignEdgeResearchDir = path.join(fetchedRoot, 'sovereign-edge', 'research');
 
 /**
  * `guides/*` source pages (fetched from sovereign's docs/guides/) are served
@@ -106,6 +107,23 @@ export function getSovereignOsAdrSidebarItems(): Array<{ text: string; link: str
     text: title,
     link: `/sovereign-os/adrs/${name.replace(/\.md$/, '')}`,
   }));
+}
+
+/**
+ * sovereign-edge's research headings read "# Research 0001 — Title", the
+ * same bare-title shape as sovereign's own RFCs — re-derive the label
+ * rather than using the heading verbatim (see this function's sibling
+ * `getRfcSidebarItems` above for why).
+ */
+export function getSovereignEdgeResearchSidebarItems(): Array<{ text: string; link: string }> {
+  return getNumberedDocSidebarItems(
+    sovereignEdgeResearchDir,
+    (number, title, name) => ({
+      text: `Research ${number} — ${title}`,
+      link: `/sovereign-edge/research/${name.replace(/\.md$/, '')}`,
+    }),
+    /^Research\s+\d+\s*[—-]\s*/,
+  );
 }
 
 function existsDir(dir: string): boolean {

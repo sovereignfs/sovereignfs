@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress';
 import {
   getRfcSidebarItems,
+  getSovereignEdgeResearchSidebarItems,
   getSovereignOsAdrSidebarItems,
   getSovereignOsRfcSidebarItems,
   pagePath,
@@ -21,6 +22,36 @@ const sovereignOsProductSidebarItems = [
   { text: 'Core Use Cases', link: '/sovereign-os/product/core-use-cases' },
   { text: 'Preview Scope', link: '/sovereign-os/product/preview-scope' },
   { text: 'Terminology', link: '/sovereign-os/product/terminology' },
+];
+
+const sovereignEdgeResearchIndexItem = {
+  text: 'Research Index',
+  link: '/sovereign-edge/research/README',
+};
+const sovereignEdgeResearchSidebarItems = [
+  sovereignEdgeResearchIndexItem,
+  ...getSovereignEdgeResearchSidebarItems(),
+];
+
+// Epics aren't numbered files (unlike RFCs/ADRs/research), so there's no
+// filename-derived sort order to auto-discover from — hand-listed here in
+// the same epic-ID order as sovereign-edge's own docs/epics/README.md.
+const sovereignEdgeEpicsIndexItem = { text: 'Epics Overview', link: '/sovereign-edge/epics/README' };
+const sovereignEdgeEpicSidebarItems = [
+  sovereignEdgeEpicsIndexItem,
+  { text: '0 — Infrastructure', link: '/sovereign-edge/epics/infrastructure' },
+  { text: '1 — Core Inference & Chat', link: '/sovereign-edge/epics/core-inference-chat' },
+  { text: '2 — Connector Framework', link: '/sovereign-edge/epics/connector-framework' },
+  { text: '3 — Search Connector', link: '/sovereign-edge/epics/search-connector' },
+  {
+    text: '4 — Sovereign Tasks Connector',
+    link: '/sovereign-edge/epics/sovereign-tasks-connector',
+  },
+  { text: '5 — Connector Store & SDK', link: '/sovereign-edge/epics/connector-store-sdk' },
+  { text: '6 — Monetization', link: '/sovereign-edge/epics/monetization' },
+  { text: '7 — Design System & Branding', link: '/sovereign-edge/epics/design-system' },
+  { text: '8 — Mobile App Shell', link: '/sovereign-edge/epics/mobile-app-shell' },
+  { text: '9 — Desktop App', link: '/sovereign-edge/epics/desktop-app' },
 ];
 
 const backToSovereign = { text: '← Sovereign', link: '/' };
@@ -65,10 +96,23 @@ export default defineConfig({
   // templates/, update/), and ROADMAP.md's relative links assume a "docs/"
   // prefix that doesn't apply to our flattened /sovereign-os/ URL structure.
   // These are genuinely unreachable in this curated subset, not a bug.
+  //
+  // sovereign-edge's docs/epics/ and docs/research/ files link two levels up
+  // to root CONCEPT.md/ROADMAP.md (e.g. "../../CONCEPT.md") — those map to
+  // /sovereign-edge/concept.md and /sovereign-edge/roadmap.md here, not a
+  // same-named file two directories up, so they're unreachable by relative
+  // path in this flattened structure too. Its research docs also link to a
+  // bare "../epics/" directory (no index.md there, only README.md), and
+  // ROADMAP.md itself links to a sibling "CONCEPT.md" (fetched as the
+  // differently-named roadmap.md/concept.md pair, so that breaks too).
   ignoreDeadLinks: [
     /^\.\/\.\.\/(roadmap|research|design|templates)\//,
     /^\.\/\.\.\/\.\.\/update\//,
     /^\.\/docs\//,
+    /^\.\/\.\.\/\.\.\/CONCEPT/,
+    /^\.\/\.\.\/\.\.\/ROADMAP/,
+    /^\.\/\.\.\/epics\/index/,
+    /^\.\/CONCEPT$/,
   ],
   transformHead({ pageData, title, description }) {
     const canonicalUrl = `${siteUrl}${pagePath(pageData.relativePath)}`;
@@ -136,14 +180,15 @@ export default defineConfig({
 
   themeConfig: {
     // Layout.vue swaps this down to just [Product, GitHub] on /sovereign-os/
-    // pages (filtered from this same array, single source of truth) — the
-    // rest of these items are sovereign-runtime-specific.
+    // and /sovereign-edge/ pages (filtered from this same array, single
+    // source of truth) — the rest of these items are sovereign-runtime-specific.
     nav: [
       {
         text: 'Product',
         items: [
           { text: 'Sovereign', link: '/' },
           { text: 'Sovereign OS', link: '/sovereign-os/' },
+          { text: 'Sovereign Edge', link: '/sovereign-edge/' },
         ],
       },
       { text: 'Instances', link: '/instances' },
@@ -214,6 +259,33 @@ export default defineConfig({
             { text: 'Roadmap', link: '/sovereign-os/roadmap' },
             { text: 'RFCs', link: '/sovereign-os/rfcs/README' },
             { text: 'ADRs', link: '/sovereign-os/adrs/README' },
+          ],
+        },
+      ],
+      '/sovereign-edge/research/': [
+        backToSovereign,
+        {
+          text: 'Research',
+          items: sovereignEdgeResearchSidebarItems,
+        },
+      ],
+      '/sovereign-edge/epics/': [
+        backToSovereign,
+        {
+          text: 'Epics',
+          items: sovereignEdgeEpicSidebarItems,
+        },
+      ],
+      '/sovereign-edge/': [
+        backToSovereign,
+        {
+          text: 'Sovereign Edge',
+          items: [
+            { text: 'Concept', link: '/sovereign-edge/concept' },
+            { text: 'Roadmap', link: '/sovereign-edge/roadmap' },
+            { text: 'Development Workflow', link: '/sovereign-edge/development-workflow' },
+            { text: 'Research', link: '/sovereign-edge/research/README' },
+            { text: 'Epics', link: '/sovereign-edge/epics/README' },
           ],
         },
       ],

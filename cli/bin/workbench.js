@@ -360,14 +360,20 @@ function cmdDocsFetch(args) {
     }
   }
 
-  // sovereign-os has no `layout: home` stub of its own (unlike sovereign's
-  // docs/index.md) — this repo commits one and copies it into place after
-  // the fetch, since anything under .fetched/ itself gets wiped above.
-  const osHomeStub = join(ROOT, "docs", "sovereign-os-home.md");
-  if (existsSync(osHomeStub)) {
-    const dest = join(fetchedDir, "sovereign-os", "index.md");
-    mkdirSync(dirname(dest), { recursive: true });
-    cpSync(osHomeStub, dest);
+  // sovereign-os and sovereign-edge have no `layout: home` stub of their own
+  // (unlike sovereign's docs/index.md) — this repo commits one per product
+  // and copies it into place after the fetch, since anything under
+  // .fetched/ itself gets wiped above.
+  const homeStubs = [
+    { stub: "sovereign-os-home.md", dest: join("sovereign-os", "index.md") },
+    { stub: "sovereign-edge-home.md", dest: join("sovereign-edge", "index.md") },
+  ];
+  for (const { stub, dest } of homeStubs) {
+    const stubPath = join(ROOT, "docs", stub);
+    if (!existsSync(stubPath)) continue;
+    const target = join(fetchedDir, dest);
+    mkdirSync(dirname(target), { recursive: true });
+    cpSync(stubPath, target);
   }
 
   console.log(
