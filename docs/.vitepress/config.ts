@@ -179,11 +179,11 @@ export default defineConfig({
       dedupe: ['vue'],
     },
     server: {
-      port: 3002,
+      port: 3333,
       strictPort: true,
     },
     preview: {
-      port: 3002,
+      port: 3333,
       strictPort: true,
     },
   },

@@ -125,7 +125,7 @@ so there's never a second copy of that prose to keep in sync by hand:
 ```sh
 cd docs
 pnpm install
-pnpm dev     # fetches, then starts the dev server at http://localhost:3002
+pnpm dev     # fetches, then starts the dev server at http://localhost:3333
 pnpm build   # fetches, then builds .vitepress/dist
 ```
 
