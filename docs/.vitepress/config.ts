@@ -126,6 +126,14 @@ export default defineConfig({
     /^\.\/\.\.\/\.\.\/CONCEPT/,
     /^\.\/\.\.\/\.\.\/ROADMAP/,
     /^\.\/CONCEPT$/, // roadmap.md -> sibling CONCEPT.md
+    // sovereign-edge's epics/research also link to root AGENTS.md,
+    // CONTRIBUTING.md, and docs/network-audit.md — none of which are in the
+    // curated docs epics/research/development-workflow subset (and publishing
+    // them wholesale cascades into links to src/, LICENSE, .node-version,
+    // etc.): genuinely unreachable in this subset, not a bug.
+    /^\.\/\.\.\/network-audit/, // epics/*, research/0004 -> docs/network-audit.md
+    /^\.\/\.\.\/\.\.\/AGENTS/, // research/0006 -> root AGENTS.md
+    /^\.\/\.\.\/CONTRIBUTING/, // development-workflow.md -> root CONTRIBUTING.md
   ],
   transformHead({ pageData, title, description }) {
     const canonicalUrl = `${siteUrl}${pagePath(pageData.relativePath)}`;
