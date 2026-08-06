@@ -200,3 +200,35 @@ under `sovereign/plugins/`:
   `plugin-` segment when auto-deriving from a URL).
 - Bumped `entities/sovereign.md`'s stated platform version from the stale
   0.44.x to the current 0.53.x.
+
+## [2026-08-06] correction | desktop/mobile-into-sovereign/apps considered and declined
+
+Developer raised moving `sovereign-desktop` and `sovereign-mobile` into
+`sovereign/apps/` (which currently holds only the `auth`/`relay` backend
+services), reasoning that both shells "have no existence" without a running
+`sovereign` instance. Discussed and declined: the dependency is real but
+sits at the network-protocol layer (`GET /api/instance`, `bridge_invoke`),
+not the source layer — neither shell imports any `@sovereignfs/*` package,
+and their release cadence (signed/notarized platform installers, meant to
+keep working against old and new instance versions alike) is deliberately
+decoupled from the runtime's continuous deploys. Wrote
+`concepts/native-shell-clients.md` to capture this reasoning durably
+(it also documents the shared RFC 0083 device-bridge contract and
+disambiguates from `sovereign-edge`'s superficially similar
+`apps/desktop`+`apps/mobile` layout, which solves a different problem).
+Added it to `index.md`.
+
+While re-reading `sovereign-desktop`'s own `CLAUDE.md`/`README.md` for this
+discussion, found `entities/sovereign-desktop.md` had drifted since its
+last 2026-07-24 ingest: still described instance validation as hitting
+`GET /api/health` (superseded by `GET /api/instance`, epic task 20.2, since
+this page was last verified), didn't mention the Tauri device-bridge
+transport (`bridge.rs`, `capabilities/bridge.json`, RFC 0083, added in
+workstream 0003 leg 3), and still said `sovereign-mobile` was "planned
+post-v1... not yet built" despite that repo existing, being pushed to
+GitHub, and having its own confluence page since 2026-07-31. Fixed all
+three. Also corrected `entities/sovereign-mobile.md`'s device-bridge
+framing, which said mobile has the bridge and desktop "doesn't have yet" —
+no longer true now that desktop's Tauri transport exists; both pages now
+cross-link to each other's bridge section instead of asserting one-way
+exclusivity.

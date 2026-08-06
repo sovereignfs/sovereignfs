@@ -1,19 +1,27 @@
 ---
 tags: [entity, runtime, desktop-shell]
 repo: git@github.com:sovereignfs/sovereign-desktop.git
-updated: 2026-07-24
+updated: 2026-08-06
 ---
 
 # sovereign-desktop — Sovereign desktop shell
 
 The native desktop shell client for [sovereign](sovereign.md). Intentionally
 a "minimal shell": on first launch the user enters their self-hosted
-Sovereign instance URL, the app validates it (`GET /api/health`) and
-persists it (multiple instances supported), then loads that instance in
-the OS-native WebView. It ships no product features itself — everything
-user-facing lives in the user's own Sovereign instance. Follows the same
-architectural pattern as the Nextcloud, Bitwarden, and Element desktop
-clients.
+Sovereign instance URL, the app validates it and persists it (multiple
+instances supported), then loads that instance in the OS-native WebView. It
+ships no product features itself — everything user-facing lives in the
+user's own Sovereign instance. Follows the same architectural pattern as
+the Nextcloud, Bitwarden, and Element desktop clients. See
+[native-shell-clients](../concepts/native-shell-clients.md) for why this
+stays a sibling repo instead of a `sovereign/apps/` package.
+
+Validation targets the public `GET /api/instance` endpoint (sovereign epic
+task 20.2; `200` + `{status, product, instanceName, platformVersion}`) —
+this supersedes the bare `/api/health` liveness probe the shell used
+before that endpoint existed, which couldn't reliably distinguish a
+genuine Sovereign instance from any other server answering `{"status":
+"ok"}`. Never uses the admin-gated `/api/admin/health`.
 
 ## Tech stack
 
@@ -47,18 +55,38 @@ clients.
 ## Relationship to sovereign
 
 Explicit **sibling repo** to the `sovereign` monorepo — not a monorepo
-package, no embedded runtime code. It's a thin wrapper that navigates its
-WebView to a user-supplied remote Sovereign instance URL:
+package, no embedded runtime code (see
+[native-shell-clients](../concepts/native-shell-clients.md) for the
+reasoning). It's a thin wrapper that navigates its WebView to a
+user-supplied remote Sovereign instance URL:
 
-- Validates reachability via the instance's public `GET /api/health`
-  (must NOT use the admin-gated `/api/admin/health`).
-- Remote instance content never gets Tauri IPC/capability access — the
-  only injected artifact is a frozen `window.__SOVEREIGN_DESKTOP__` marker
-  (`{shell, os, version}`) that `sovereign`'s SDK (`sdk.device.*`, tracked
-  as monorepo epic task 17.7) reads for desktop-environment detection.
+- Validates reachability via the instance's public `GET /api/instance`
+  (see above; must NOT use the admin-gated `/api/admin/health`).
+- Remote instance content gets no Tauri IPC/capability access beyond one
+  narrow, deliberate exception: the device bridge (below). The
+  `window.__SOVEREIGN_DESKTOP__` marker (`{shell, os, version}`) is a
+  separate, non-IPC injected artifact — a frozen data object only — that
+  `sovereign`'s SDK (`sdk.device.*`, tracked as monorepo epic task 17.7)
+  reads for desktop-environment detection.
 - This shell's own spec (RFC 0038, epic 17, SRS §3.19) and roadmap/version
   tracking live centrally in [sovereign](sovereign.md)'s
   `docs/roadmap.md` ("Desktop" section) — not duplicated here.
+
+### Device bridge (RFC 0083, workstream 0003 leg 3)
+
+A second `initialization_script`, chained after the marker script above,
+defines `window.__SOVEREIGN_BRIDGE__` on every page load — the Tauri
+transport of the same `@sovereignfs/bridge` protocol
+[sovereign-mobile](sovereign-mobile.md) implements over Capacitor, so
+plugins can call `sdk.device.*` from either shell without drifting apart.
+Unlike the marker, this **is** real IPC, by deliberate narrow exception to
+the "no remote IPC access" rule above: `src-tauri/capabilities/bridge.json`
+grants the loaded instance's origin exactly one command,
+`bridge_invoke` (`src-tauri/src/bridge.rs`), and nothing else. Currently
+dispatches `notifications.native` (real native delivery via
+`tauri-plugin-notification`, not the WKWebView `Notification` API);
+`haptics.impact` is a deliberate no-op (falls through to `unavailable`) per
+RFC 0083 §7 — not a gap to fill casually.
 
 ## Notable architectural facts
 
@@ -72,6 +100,6 @@ WebView to a user-supplied remote Sovereign instance URL:
   `tauri.conf.json`.
 - Hard rule: TypeScript-first, Rust only for native glue that must survive
   WebView navigation to remote content.
-- A sibling `sovereign-mobile` (Capacitor shell) is planned post-v1,
-  consuming the same `sdk.device.*` abstraction — not yet built, not in
-  `workbench.manifest.json`.
+- Sibling repo [sovereign-mobile](sovereign-mobile.md) (Capacitor shell)
+  now exists — pushed to GitHub, in `workbench.manifest.json`, shell
+  scaffold in progress — and shares the device bridge contract above.
