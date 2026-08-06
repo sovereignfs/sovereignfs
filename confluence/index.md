@@ -17,10 +17,11 @@ One page per repo in [workbench.manifest.json](../workbench.manifest.json).
 - [sovereign-desktop](entities/sovereign-desktop.md) — Tauri-based native
   desktop shell that loads a user's Sovereign instance in a WebView.
 - [sovereign-mobile](entities/sovereign-mobile.md) — Capacitor-based native
-  mobile shell (iOS + Android), same pattern as sovereign-desktop, plus a
-  device-bridge layer for `sdk.device.*`. Repo created and pushed to
-  GitHub; shell scaffold (epic task 20.1) in progress, verified on iOS
-  Simulator, Android not yet compile-verified.
+  mobile shell (iOS + Android), same pattern as sovereign-desktop; first to
+  implement the shared device-bridge layer for `sdk.device.*` (RFC 0083),
+  which sovereign-desktop has since also picked up. Repo created and
+  pushed to GitHub; shell scaffold (epic task 20.1) in progress, verified
+  on iOS Simulator, Android not yet compile-verified.
 - [sovereign-infra](entities/sovereign-infra.md) — operator-facing VPS
   deployment template (Caddy + Docker Compose + age-encrypted secrets)
   for self-hosting `sovereign`.
@@ -47,6 +48,10 @@ Cross-cutting ideas that span more than one repo.
 - [cross-repo-conventions](concepts/cross-repo-conventions.md) — why
   documentation numbering (RFCs, ADRs, SRS) and AI-agent commit
   conventions differ per repo, and don't transfer between them.
+- [native-shell-clients](concepts/native-shell-clients.md) — why
+  `sovereign-desktop`/`sovereign-mobile` stay protocol-coupled sibling
+  repos instead of `sovereign/apps/` packages, and their shared device-
+  bridge contract (RFC 0083).
 
 ## Research
 

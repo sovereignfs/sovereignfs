@@ -13,14 +13,18 @@ validates and persists it (multiple instances supported), then loads that
 instance in a native WebView. It ships no product features itself —
 everything user-facing lives in the user's own Sovereign instance. Built
 with Capacitor (iOS + Android from one codebase), the same pattern as the
-Nextcloud, Bitwarden, and Element mobile clients.
+Nextcloud, Bitwarden, and Element mobile clients. See
+[native-shell-clients](../concepts/native-shell-clients.md) for why this
+stays a sibling repo instead of a `sovereign/apps/` package.
 
-Adds one thing `sovereign-desktop` doesn't have yet: a **device bridge** —
-a capability-negotiated channel, shared with `sovereign-desktop`, that lets
-plugins running inside the WebView call `sdk.device.*` and reach real
-device hardware (geolocation, camera, calendar, NFC, haptics, push —
-whatever a plugin legitimately needs), without ever importing Capacitor
-directly.
+Was first to implement the **device bridge** (RFC 0083) — a
+capability-negotiated channel that lets plugins running inside the WebView
+call `sdk.device.*` and reach real device hardware (geolocation, camera,
+calendar, NFC, haptics, push — whatever a plugin legitimately needs)
+without ever importing Capacitor directly. `sovereign-desktop` has since
+added its own Tauri transport of the same protocol (workstream 0003 leg
+3), so both shells now implement it — see
+[sovereign-desktop](sovereign-desktop.md#device-bridge-rfc-0083-workstream-0003-leg-3).
 
 ## Status — repo created, shell scaffold in progress
 
