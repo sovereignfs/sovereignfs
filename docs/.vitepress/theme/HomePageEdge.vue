@@ -18,11 +18,27 @@
             software — but only once you've granted that specific connector
             that specific permission.
           </p>
+          <!--
+            Status prose, hand-written and therefore perishable. The version
+            of this paragraph it replaced still said inference, chat, and
+            connectors "are not built yet" long after all three shipped — the
+            site was understating a working app by about two phases, because
+            nothing here is derived from anything.
+
+            Source of truth is sovereign-edge's own ROADMAP.md and
+            docs/epics/README.md, both mirrored onto this site (/sovereign-edge/
+            roadmap, /sovereign-edge/epics/README). Re-read them before editing
+            this, and keep the claims to what those two documents mark done.
+            Last checked against ROADMAP.md 0.2.12 (updated 2026-09-04).
+          -->
           <p class="sv-hero-detail">
-            <strong>Current status:</strong> early development — not usable
-            yet, and not a release. The repo scaffold and CI pipeline are in
-            place; on-device inference, the chat UI, and the connector layer
-            are not built yet.
+            <strong>Current status:</strong> the mobile app runs fully offline
+            chat against a model you download onto the device, with writing
+            assistance, and with Search, Calendar, and device connectors
+            working under explicit per-connector permission. It isn't in the
+            App Store or Play Store yet. A secondary desktop client publishes
+            real macOS, Windows, and Linux builds (v0.1.5) with in-app
+            updates; those installers aren't code-signed yet.
           </p>
           <div class="sv-actions" aria-label="Explore Sovereign Edge">
             <a class="sv-action sv-action-primary" href="/sovereign-edge/concept">Read the concept</a>

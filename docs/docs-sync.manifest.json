@@ -27,6 +27,7 @@
         { "from": "docs/security.md", "to": "security.md" },
         { "from": "docs/self-hosting.md", "to": "self-hosting.md" },
         { "from": "docs/testing-e2e.md", "to": "testing-e2e.md" },
+        { "from": "docs/testing-visual.md", "to": "testing-visual.md" },
         { "from": "docs/troubleshooting.md", "to": "troubleshooting.md" },
         { "from": "docs/upgrade.md", "to": "upgrade.md" }
       ]
@@ -38,9 +39,34 @@
         { "from": "docs/product", "to": "sovereign-os/product" },
         { "from": "docs/rfcs", "to": "sovereign-os/rfcs" },
         { "from": "docs/adrs", "to": "sovereign-os/adrs" },
+        { "from": "docs/architecture/system-overview.md", "to": "sovereign-os/architecture/system-overview.md" },
+        { "from": "docs/security/threat-model.md", "to": "sovereign-os/security/threat-model.md" },
+        { "from": "docs/security/data-inventory.md", "to": "sovereign-os/security/data-inventory.md" },
+        { "from": "docs/development/workflow.md", "to": "sovereign-os/development/workflow.md" },
+        { "from": "docs/operations/first-login-and-network-setup.md", "to": "sovereign-os/guides/first-login-and-network-setup.md" },
+        { "from": "docs/operations/raspberry-pi-imager-provisioning.md", "to": "sovereign-os/guides/raspberry-pi-imager-provisioning.md" },
+        { "from": "docs/operations/update-recovery-and-compatibility.md", "to": "sovereign-os/guides/update-recovery-and-compatibility.md" },
         { "from": "ROADMAP.md", "to": "sovereign-os/roadmap.md" },
         { "from": "CONCEPT.md", "to": "sovereign-os/concept.md" }
       ]
+    },
+    {
+      "id": "sovereign-mobile",
+      "repo": "sovereign-mobile",
+      "paths": [
+        { "from": "docs/adrs", "to": "apps/mobile/adrs" },
+        { "from": "docs/epics", "to": "apps/mobile/epics" },
+        { "from": "docs/research", "to": "apps/mobile/research" },
+        { "from": "docs/development-workflow.md", "to": "apps/mobile/development-workflow.md" },
+        { "from": "docs/store-listing.md", "to": "apps/mobile/store-listing.md" },
+        { "from": "ROADMAP.md", "to": "apps/mobile/roadmap.md" },
+        { "from": "CONCEPT.md", "to": "apps/mobile/index.md" }
+      ]
+    },
+    {
+      "id": "sovereign-desktop",
+      "repo": "sovereign-desktop",
+      "paths": [{ "from": "README.md", "to": "apps/desktop/index.md" }]
     },
     {
       "id": "sovereign-edge",

@@ -33,6 +33,12 @@ work, go read that product's own `AGENTS.md` inside its checkout
   (gitignored, rebuilt by `workbench docs fetch`) is where that content
   actually lands before `vitepress build`/`dev` reads it as `srcDir`.
   Never edit anything under `.fetched/` — it's regenerated on every fetch.
+  [docs/README.md](docs/README.md) is the working reference for that
+  directory: where a given change belongs, and the three invariants that
+  aren't obvious from the code — nav/sidebar links are checked by
+  `assertThemeLinksResolve` (VitePress never checks them), fetched markdown
+  is authored against GitHub's renderer and is normalized in
+  `markdown.config`, and only a real fetch + build tells you the truth.
   `.github/workflows/docs.yml` builds on PR and deploys to the external
   `sovereignfs/sovereignfs.github.io` repo on a `docs-vX.Y.Z` tag push or
   manual dispatch — same tag convention `sovereign`'s retired doc CI used.
