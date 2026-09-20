@@ -307,6 +307,13 @@ function sparseCheckout(url, paths, https) {
 
 function cmdDocsFetch(args) {
   const https = args.includes("--https");
+  // Content is normally cloned from each repo's remote, which means prose you
+  // have edited but not yet pushed can't be previewed at all — the fetch
+  // replaces it with whatever main says. --local reads from the cloned
+  // checkouts at the manifest's paths instead, so an edit in sovereign/docs/
+  // shows up in `vitepress dev` before it becomes a commit. Never deploy from
+  // it: a local working tree is not what the world will see.
+  const local = args.includes("--local");
   const manifestPath = join(ROOT, "docs", "docs-sync.manifest.json");
   if (!existsSync(manifestPath)) {
     console.error(`No docs/docs-sync.manifest.json found at ${manifestPath}.`);
@@ -335,13 +342,24 @@ function cmdDocsFetch(args) {
       continue;
     }
     let scratch;
+    let fromLocalCheckout = false;
     try {
-      console.log(`${label} fetching ${source.paths.length} path(s) from ${repo.id}...`);
-      scratch = sparseCheckout(
-        repo.url,
-        source.paths.map((p) => p.from),
-        https
-      );
+      const localPath = join(ROOT, repo.path);
+      if (local && existsSync(localPath)) {
+        console.log(`${label} reading ${source.paths.length} path(s) from local ${repo.path}/`);
+        scratch = localPath;
+        fromLocalCheckout = true;
+      } else {
+        if (local) {
+          console.log(`${label} no checkout at ${repo.path}/ — cloning the remote instead`);
+        }
+        console.log(`${label} fetching ${source.paths.length} path(s) from ${repo.id}...`);
+        scratch = sparseCheckout(
+          repo.url,
+          source.paths.map((p) => p.from),
+          https
+        );
+      }
       for (const { from, to, exclude } of source.paths) {
         const src = join(scratch, from);
         const dest = join(fetchedDir, to);
@@ -356,7 +374,8 @@ function cmdDocsFetch(args) {
       console.error(`${label} failed: ${err.message}`);
       results.failed.push(source.id);
     } finally {
-      if (scratch) rmSync(scratch, { recursive: true, force: true });
+      // Only a scratch clone is ours to delete — never the real checkout.
+      if (scratch && !fromLocalCheckout) rmSync(scratch, { recursive: true, force: true });
     }
   }
 
@@ -380,6 +399,13 @@ function cmdDocsFetch(args) {
     `\ndone: ${results.ok.length} ok, ${results.failed.length} failed` +
       (results.failed.length ? ` (${results.failed.join(", ")})` : "")
   );
+  if (local) {
+    console.log(
+      "\nNOTE: --local — this content came from your working trees, uncommitted\n" +
+        "edits included. Re-run without --local before judging what a deploy\n" +
+        "would actually publish."
+    );
+  }
   if (results.failed.length) process.exitCode = 1;
 }
 
@@ -637,8 +663,11 @@ Usage:
   workbench confluence lint         Report entity pages whose source repo has newer
                                      commits than the page's "updated" date
   workbench confluence sync         Same as lint, but "git pull"s each mapped repo first
-  workbench docs fetch [--https]    Fetch the paths in docs/docs-sync.manifest.json into
-                                     docs/.fetched/, for the docs site build
+  workbench docs fetch [--https] [--local]
+                                     Fetch the paths in docs/docs-sync.manifest.json into
+                                     docs/.fetched/, for the docs site build. --local reads
+                                     from your cloned checkouts rather than the remotes, to
+                                     preview doc edits you haven't pushed yet
   workbench kill-port [spec...]     Kill whatever's listening on the given ports/ranges
                                      e.g. "kill-port 3000", "kill-port 3000-3002",
                                      "kill-port 3001 3002 4000"

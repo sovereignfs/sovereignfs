@@ -22,8 +22,8 @@
             release.
           </p>
           <div class="sv-actions" aria-label="Explore Sovereign OS">
-            <a class="sv-action sv-action-primary" href="/sovereign-os/concept">Read the concept</a>
-            <a class="sv-action sv-action-secondary" href="/sovereign-os/rfcs/README">Browse RFCs</a>
+            <a class="sv-action sv-action-primary" href="/sovereign-os/guides/first-login-and-network-setup">Set up a device</a>
+            <a class="sv-action sv-action-secondary" href="/sovereign-os/concept">Read the concept</a>
             <a class="sv-action sv-action-link" href="/">← Sovereign</a>
           </div>
         </div>
@@ -33,7 +33,12 @@
             <div class="sv-console-topbar">
               <span class="sv-brand-mark">OS</span>
               <strong>Sovereign OS</strong>
-              <span class="sv-console-version">0.1.0-preview.18</span>
+              <!-- Deliberately not a version number: this is a mockup, and the one
+                   that used to sit here (0.1.0-preview.18) was eight preview
+                   releases stale before anyone noticed. sovereign-os has no single
+                   version file to read at fetch time, so there is nothing here to
+                   keep in sync. -->
+              <span class="sv-console-version">Preview</span>
             </div>
             <div class="sv-console-main">
               <header class="sv-console-header">

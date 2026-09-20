@@ -64,28 +64,28 @@ Numbered decision records, append-only history — see
 
 ## Gaps (known, not yet mapped)
 
-**Individual plugin repos** — not in `workbench.manifest.json` and not
-given their own entity pages (per `sovereign`'s own `docs/repositories.md`,
-these are tracked via `registry/plugins.json` there, not a repo-map table —
-that registry is currently empty). Confirmed to exist as
-`sovereignfs/sovereign-plugin-<name>` (one is `kasunben/`-owned, not
-`sovereignfs/`) and cloned locally as personal `.local` dev checkouts
-under `sovereign/plugins/` as of 2026-08-01: `docs`, `healthlog`, `ledger`,
-`papertrail` (`kasunben/sovereign-plugin-papertrail`), `plainwrite`,
-`sheets`, `shopper`, `tally`, `tasks`, `tritext`, `wallet`. Each plugin's
-in-tree `package.json` `"name"` still reads `@sovereignfs/sovereign-<name>`
-(pre-rename form) rather than `@sovereignfs/sovereign-plugin-<name>` —
-per `sovereign`'s naming notes this is expected/harmless (repo name,
-package name, and manifest `id` are independent), not drift to fix.
-`sovereign-tritext`'s package name is the outlier, `@sovereignfs/plugin-tritext`
-(no `sovereign-` at all) — unclear if intentional.
-- `sovereign-plugin-tasks`, `sovereign-plugin-plainwrite` — referenced in
-  the SRS as default-bundled product plugins, though `sovereign.plugins.json`
-  is currently empty so neither actually ships by default
-- The other nine (`docs`, `healthlog`, `ledger`, `papertrail`, `sheets`,
-  `shopper`, `tally`, `tritext`, `wallet`) aren't referenced in any
-  `sovereign` doc as bundled/default — apparently personal/in-development
-  plugins, not yet part of any documented product line
+**Individual plugin repos** — not in `workbench.manifest.json` and not given
+their own entity pages. They're tracked in `sovereign`'s own
+`registry/plugins.json`, which as of 2026-09-18 holds ten entries, matching
+exactly what `support/openfs-infra/sovereign.plugins.json` deploys to the
+openfs instance: `fs.sovereign.{docs,kanban,ledger,plainwrite,sheets,shopper,tally,tasks,travellog,wallet}`.
+These are no longer an undocumented set — `sovereign`'s
+`docs/product/apps.md` now describes each one as a first-party app, so the
+public product line and the registry agree.
+
+Each plugin's in-tree `package.json` `"name"` is inconsistent
+(`@sovereignfs/sovereign-<name>`, `sovereign-plugin-<name>`, and
+`@sovereignfs/plugin-tritext` all appear) — per `sovereign`'s naming notes
+this is expected and harmless, since repo name, package name, and manifest
+`id` are independent, not drift to fix.
+
+Three repos in the personal clone list (`sovereign.plugins.local`) are in
+neither the registry nor the openfs deployment: `healthlog`, `tritext`, and
+`papertrail` (`kasunben/`-owned, not `sovereignfs/`). That list has also not
+kept up in the other direction — `kanban` and `travellog` are checked out
+locally and shipping, but absent from it. Treat `sovereign.plugins.local` as
+one developer's scratch list, not a source of truth about the product line;
+the registry and the deploy manifest are.
 
 **Other repos** — `storybook` (`sovereignfs/storybook`, GitHub Pages
 deployment target for the `@sovereignfs/ui` Storybook site — confirmed

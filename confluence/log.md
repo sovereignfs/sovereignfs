@@ -232,3 +232,20 @@ framing, which said mobile has the bridge and desktop "doesn't have yet" —
 no longer true now that desktop's Tauri transport exists; both pages now
 cross-link to each other's bridge section instead of asserting one-way
 exclusivity.
+
+## [2026-09-18] ingest | Plugin product line, and the docs site's publication set
+Re-read `sovereign`'s `registry/plugins.json` (ten entries) and
+`support/openfs-infra/sovereign.plugins.json` (same ten, deployed to the
+openfs instance) while updating the public docs site. Corrected `index.md`'s
+"Gaps" section, which still said the registry was empty and described these
+plugins as personal/in-development work outside any documented product line —
+both untrue now: `docs/product/apps.md` documents all ten as first-party apps,
+alongside Warden, the built-in AI assistant that ships in the platform repo
+(`type: sovereign`, activated like an ordinary app, not chrome like Account,
+Console, Inbox and Launcher).
+
+Noted but not changed: `sovereign.plugins.local` has drifted in both
+directions from what is actually checked out and shipping — it still lists
+`healthlog`, `tritext` and `papertrail`, and is missing `kanban` and
+`travellog`. It's one developer's clone list, so that drift is cosmetic, but
+it is no longer usable as evidence of the plugin set.
