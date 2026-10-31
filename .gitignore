@@ -7,6 +7,9 @@
 /fjord/
 /support/
 /pods/
+/sovereign-infra/
+/sovereign-legacy/
+/sovereign-plugin-template/
 
 # Personal list of plugin repos to clone as sovereign/plugins/<name>.local
 # (read by `workbench plugins pull`) — see sovereign.plugins.local.example

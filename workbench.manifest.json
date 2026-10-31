@@ -7,6 +7,12 @@
       "type": "runtime"
     },
     {
+      "id": "sovereign",
+      "url": "git@github.com:sovereignfs/sovereign-legacy.git",
+      "path": "sovereign-legacy",
+      "type": "runtime"
+    },
+    {
       "id": "sovereign-os",
       "url": "git@github.com:sovereignfs/sovereign-os.git",
       "path": "sovereign-os",
@@ -33,13 +39,13 @@
     {
       "id": "sovereign-infra",
       "url": "git@github.com:sovereignfs/sovereign-infra.git",
-      "path": "support/sovereign-infra",
+      "path": "sovereign-infra",
       "type": "support"
     },
     {
       "id": "sovereign-plugin-template",
       "url": "git@github.com:sovereignfs/sovereign-plugin-template.git",
-      "path": "support/sovereign-plugin-template",
+      "path": "sovereign-plugin-template",
       "type": "support"
     },
     {
