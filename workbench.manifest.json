@@ -11,8 +11,7 @@
       "url": "git@github.com:sovereignfs/sovereign-legacy.git",
       "path": "sovereign-legacy",
       "type": "launcher",
-      "legacy": true,
-      "skip": true
+      "legacy": true
     },
     {
       "id": "sovereign-os",
@@ -47,7 +46,8 @@
       "url": "git@github.com:sovereignfs/sovereign-infra.git",
       "path": "sovereign-infra",
       "type": "support",
-      "legacy": true
+      "legacy": true,
+      "skip": true
     },
     {
       "id": "fjord",
