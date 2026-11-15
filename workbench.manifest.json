@@ -1,0 +1,95 @@
+{
+  "repos": [
+    {
+      "id": "sovereign",
+      "url": "git@github.com:sovereignfs/sovereign.git",
+      "path": "sovereign",
+      "type": "launcher"
+    },
+    {
+      "id": "sovereign",
+      "url": "git@github.com:sovereignfs/sovereign-legacy.git",
+      "path": "sovereign-legacy",
+      "type": "launcher",
+      "legacy": true,
+      "skip": true
+    },
+    {
+      "id": "sovereign-os",
+      "url": "git@github.com:sovereignfs/sovereign-os.git",
+      "path": "sovereign-os",
+      "type": "os",
+      "skip": true
+    },
+    {
+      "id": "sovereign-edge",
+      "url": "git@github.com:sovereignfs/sovereign-edge.git",
+      "path": "sovereign-edge",
+      "type": "mobile",
+      "skip": true
+    },
+    {
+      "id": "sovereign-mobile",
+      "url": "git@github.com:sovereignfs/sovereign-mobile.git",
+      "path": "sovereign-mobile",
+      "type": "mobile",
+      "skip": true
+    },
+    {
+      "id": "sovereign-desktop",
+      "url": "git@github.com:sovereignfs/sovereign-desktop.git",
+      "path": "sovereign-desktop",
+      "type": "desktop",
+      "skip": true
+    },
+    {
+      "id": "sovereign-infra",
+      "url": "git@github.com:sovereignfs/sovereign-infra.git",
+      "path": "sovereign-infra",
+      "type": "support",
+      "legacy": true
+    },
+    {
+      "id": "fjord",
+      "url": "git@github.com:sovereignfs/fjord",
+      "path": "fjord",
+      "type": "sovereign-app"
+    },
+    {
+      "id": "ledger",
+      "url": "git@github.com:sovereignfs/ledger",
+      "path": "ledger",
+      "type": "sovereign-app"
+    },
+    {
+      "id": "shopper",
+      "url": "git@github.com:sovereignfs/shopper",
+      "path": "shopper",
+      "type": "sovereign-app"
+    },
+    {
+      "id": "tally",
+      "url": "git@github.com:sovereignfs/tally",
+      "path": "tally",
+      "type": "sovereign-app"
+    },
+    {
+      "id": "tusk",
+      "url": "git@github.com:sovereignfs/tusk",
+      "path": "tusk",
+      "type": "sovereign-app"
+    },
+    {
+      "id": "wallet",
+      "url": "git@github.com:sovereignfs/wallet",
+      "path": "wallet",
+      "type": "sovereign-app"
+    },
+    {
+      "id": "waymark",
+      "url": "git@github.com:sovereignfs/waymark",
+      "path": "waymark",
+      "type": "sovereign-app"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+# Spawned by `workbench init` / `workbench pod create` / `workbench pull --reset`
+# — see workbench.manifest.json
+/sovereign/
+/sovereign-legacy/
+/sovereign-os/
+/sovereign-edge/
+/sovereign-desktop/
+/sovereign-mobile/
+/sovereign-infra/
+/fjord/
+/ledger/
+/shopper/
+/tally/
+/tusk/
+/wallet/
+/waymark/
+/pods/
+*.reset-tmp/
+
+node_modules/
+.DS_Store
