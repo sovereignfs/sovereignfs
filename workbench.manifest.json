@@ -56,6 +56,12 @@
       "type": "sovereign-app"
     },
     {
+      "id": "haven",
+      "url": "git@github.com:sovereignfs/haven",
+      "path": "haven",
+      "type": "sovereign-app"
+    },
+    {
       "id": "ledger",
       "url": "git@github.com:sovereignfs/ledger",
       "path": "ledger",
