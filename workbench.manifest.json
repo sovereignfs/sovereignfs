@@ -56,6 +56,12 @@
       "type": "sovereign-app"
     },
     {
+      "id": "foundry",
+      "url": "git@github.com:sovereignfs/foundry",
+      "path": "foundry",
+      "type": "sovereign-app"
+    },
+    {
       "id": "haven",
       "url": "git@github.com:sovereignfs/haven",
       "path": "haven",
