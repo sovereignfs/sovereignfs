@@ -74,6 +74,12 @@
       "type": "sovereign-app"
     },
     {
+      "id": "loom",
+      "url": "git@github.com:sovereignfs/loom",
+      "path": "loom",
+      "type": "sovereign-app"
+    },
+    {
       "id": "shopper",
       "url": "git@github.com:sovereignfs/shopper",
       "path": "shopper",
