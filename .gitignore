@@ -1,24 +1,25 @@
-# Spawned by `workbench init` / `workbench pod create` / `workbench pull --reset`
-# — see workbench.manifest.json
+# >>> workbench: managed by `wb`, edits inside this block are overwritten >>>
 /sovereign/
 /sovereign-legacy/
 /sovereign-os/
 /sovereign-edge/
-/sovereign-desktop/
 /sovereign-mobile/
+/sovereign-desktop/
 /sovereign-infra/
+/workbench/
 /fjord/
+/foundry/
+/haven/
 /ledger/
+/loom/
 /shopper/
 /tally/
 /tusk/
 /wallet/
-/haven/
 /waymark/
-/loom/
-/foundry/
 /pods/
 *.reset-tmp/
+# <<< workbench <<<
 
 node_modules/
 .DS_Store

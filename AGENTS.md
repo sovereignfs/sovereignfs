@@ -6,89 +6,74 @@ here; this file is the canonical source.
 ## What this repo is
 
 `sovereignfs/sovereignfs` is the optional dev workbench for the Sovereign
-ecosystem: a manifest of repos plus a small CLI that checks them out, keeps
-them current, and creates isolated "pods" for parallel work. It owns nothing
-else. See [CONCEPT.md](CONCEPT.md) for the reasoning and
+ecosystem. It is a manifest of repos, run by the `wb` CLI, which checks them
+out, keeps them current and creates isolated "pods" for parallel work. It
+owns nothing else. See [CONCEPT.md](CONCEPT.md) for the reasoning and
 [README.md](README.md) for usage.
 
 - Every repo in the ecosystem works standalone. The workbench is a
   convenience and must never become a requirement.
 - Other projects' code, docs, RFCs and conventions live in their own repos.
   Don't copy them here.
+- The CLI lives in its own repo and npm package:
+  [`sovereignfs/workbench`](https://github.com/sovereignfs/workbench)
+  (`@sovereignfs/workbench`). CLI changes, their tests and the CLI
+  conventions all live there. That repo is generic: nothing Sovereign-specific
+  goes into it. Sovereign specifics belong in this repo's manifest.
 
 ## Layout
 
 ```
-workbench.manifest.json   # source of truth: which repos exist and where they land
-workbench.sh              # shim → node cli/bin/workbench.js
-cli/bin/workbench.js      # the whole CLI (single file, ESM, no dependencies)
+workbench.manifest.json   # source of truth: which repos exist and how to work with them
+workbench.sh              # shim → ./workbench checkout if present, else npx @sovereignfs/workbench
 CONCEPT.md / README.md    # design rationale / usage
 ```
 
-Everything the CLI spawns (`sovereign/`, `fjord/`, `pods/`, …) is gitignored
-and belongs to other repos. Never `git add` it, and never edit files inside
-those checkouts as part of a workbench change.
+Everything the CLI spawns (`sovereign/`, `fjord/`, `workbench/`, `pods/`, …)
+is gitignored and belongs to other repos. Never `git add` it, and never edit
+files inside those checkouts as part of a workbench change. The exception is
+a change to the CLI itself, which happens in the `workbench/` checkout and is
+committed there.
 
 ## The manifest
 
-Each entry in `workbench.manifest.json` has `id`, `url`, `path` and `type`,
-plus optional flags:
+The format is defined by the package. See its
+[README](https://github.com/sovereignfs/workbench#the-manifest) and the
+`$schema`. The parts this repo relies on:
 
-- `"skip": true` — `init` leaves it out; it can still be pulled, reset-cloned
-  and pod-ed.
-- `"legacy": true` — retired; gets no pods. May reuse another entry's `id`
-  (`sovereign-legacy` reuses `sovereign`).
+- Each repo entry has `id`, `url`, `path` and `type`, plus optional flags:
+  - `"skip": true`: `init` leaves the repo out. It can still be pulled,
+    reset-cloned and pod-ed. `workbench` is a skip entry, so contributors run
+    the published CLI by default.
+  - `"legacy": true`: retired. It gets no pods, and may reuse another entry's
+    `id` (`sovereign-legacy` reuses `sovereign`).
+- `pod` settings:
+  - `pod.prefix` keeps the historical pod names: `p<n>` for `sovereign`,
+    `os<n>` for `sovereign-os`.
+  - `pod.ports` lists the fixed-port env vars rewritten into each pod's port
+    block (`sovereign`: `RUNTIME_PORT`, `AUTH_PORT`).
+- `defaults.install: "pnpm"` runs `pnpm install` in new pods that have a
+  `package.json`.
 
-Because ids can repeat, **address repos by `path`** (unique). Use
-`findRepo(manifest, name)` in the CLI; don't `find((r) => r.id === …)`
-directly. A bare id resolves to the non-legacy entry.
+Because ids can repeat, address repos by `path`, which is unique.
 
-When adding a repo, also add its `/<path>/` line to `.gitignore`.
+When adding a repo, use `./workbench.sh add <url> --type <type>`. Or edit
+the manifest and run `./workbench.sh gitignore`, which rewrites the managed
+`.gitignore` block. Verify with `./workbench.sh gitignore --check`.
 
-## CLI conventions
+## Verifying changes here
 
-- Node ≥ the version in `.node-version`. ESM, built-ins only. Don't add
-  dependencies or a build step.
-- One `cmdX(args)` function per command, wired in the `switch` at the bottom,
-  with its usage text in `printUsage()`.
-- Set `process.exitCode = 1` on failure rather than calling `process.exit`.
-  Commands that loop over repos continue past a failure, then print a
-  `done: N ok, N skipped, N failed` summary.
-- Use `git()` (streams output) or `gitOut()` (returns stdout) with
-  `execFileSync` and argument arrays. No shell strings.
-- Repos are cloned over SSH by default; `--https` rewrites via `toHttps()`.
-
-### Safety rules for destructive operations
-
-The CLI operates on other repos' working trees, so protect user work:
-
-- `pull` stashes before touching a dirty `main` and restores with
-  `stash apply` (not `pop`). Keep it fast-forward only.
-- `pull <repo> --reset` must clone first, swap second, and refuse to discard
-  uncommitted changes, unpushed commits or stashes without `--force`.
-- `clear` stashes before resetting. `kill-port` kills by port with no
-  ownership check; don't run it on the user's machine unprompted.
-- Don't add anything that deletes or overwrites a checkout without a guard
-  like the above.
-
-## Testing changes
-
-There is no test suite. Verify CLI changes against throwaway repos, never the
-real remotes:
-
-1. In a scratch directory, create local bare repos (`git init --bare -b main`)
-   and seed each with a commit.
-2. Copy `cli/bin/workbench.js` next to a `workbench.manifest.json` whose
-   `url`s point at those bare repos (the CLI resolves `ROOT` from its own
-   location, three directories up).
-3. Exercise the command, including the failure paths (dirty tree, feature
-   branch, unpushed commits, legacy and unknown names).
-
-Also run `node --check cli/bin/workbench.js`.
+- Manifest changes:
+  - `./workbench.sh gitignore --check` validates the manifest and the
+    `.gitignore` block.
+  - `./workbench.sh status` shows that every entry resolves.
+- Don't run `clear`, `pull --reset --force` or `kill-port` against the
+  user's checkouts unprompted.
 
 ## Keeping docs in sync
 
-Behavior is described in three places: `printUsage()`, README, and CONCEPT.
-When a command's behavior changes, update all three in the same commit. If a
-feature is removed, remove its mentions everywhere rather than leaving a
-history note.
+Workbench behaviour is described in the package's docs. This repo's README
+and CONCEPT cover the Sovereign setup and link to the package for
+everything else. When the manifest or the shim changes, update both in the
+same commit. If a feature is removed, remove its mentions everywhere rather
+than leaving a history note.

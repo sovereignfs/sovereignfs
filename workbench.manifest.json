@@ -1,10 +1,45 @@
 {
+  "$schema": "https://unpkg.com/@sovereignfs/workbench@0/schema/manifest.schema.json",
+  "version": 1,
+  "name": "sovereignfs",
+  "defaults": {
+    "branch": "main",
+    "install": "pnpm",
+    "carry": [
+      ".env"
+    ]
+  },
+  "pods": {
+    "dir": "pods",
+    "portBase": 5000,
+    "blockSize": 10
+  },
+  "killPort": {
+    "defaults": [
+      "3000-3999",
+      "4000-4999",
+      "5000-5999"
+    ]
+  },
   "repos": [
     {
       "id": "sovereign",
       "url": "git@github.com:sovereignfs/sovereign.git",
       "path": "sovereign",
-      "type": "launcher"
+      "type": "launcher",
+      "pod": {
+        "prefix": "p",
+        "ports": [
+          {
+            "key": "RUNTIME_PORT",
+            "default": 3000
+          },
+          {
+            "key": "AUTH_PORT",
+            "default": 3001
+          }
+        ]
+      }
     },
     {
       "id": "sovereign",
@@ -18,7 +53,10 @@
       "url": "git@github.com:sovereignfs/sovereign-os.git",
       "path": "sovereign-os",
       "type": "os",
-      "skip": true
+      "skip": true,
+      "pod": {
+        "prefix": "os"
+      }
     },
     {
       "id": "sovereign-edge",
@@ -47,6 +85,13 @@
       "path": "sovereign-infra",
       "type": "support",
       "legacy": true,
+      "skip": true
+    },
+    {
+      "id": "workbench",
+      "url": "git@github.com:sovereignfs/workbench.git",
+      "path": "workbench",
+      "type": "tooling",
       "skip": true
     },
     {

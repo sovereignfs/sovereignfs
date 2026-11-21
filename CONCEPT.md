@@ -23,12 +23,13 @@ docs, RFCs, SRS, or workflow — those stay in each repo.
 sovereignfs/sovereignfs/
 ├── CONCEPT.md                # this document
 ├── README.md                 # human-facing entry point
-├── workbench.sh               # thin shim invoking the workbench CLI
+├── workbench.sh               # thin shim invoking the workbench CLI (wb)
 ├── workbench.manifest.json   # source of truth: what repos exist, where they land
-├── .gitignore                # ignores every dir the CLI spawns
+├── .gitignore                # managed block ignores every dir the CLI spawns
 └── (gitignored, spawned by the CLI:)
     ├── sovereign/             # main checkout of sovereignfs/sovereign
     ├── fjord/, tally/, ...    # one checkout per manifest repo, at its "path"
+    ├── workbench/             # the CLI's own repo, only if you clone it
     └── pods/                  # isolated per-project checkouts, see below
 ```
 
@@ -40,7 +41,7 @@ ecosystem — its clone URL, where it lands locally, and its type
 plus two optional flags:
 
 - `"skip": true` — `init` leaves the repo out. It stays in the manifest so
-  it can still be cloned on demand (`workbench pull <repo> --reset`), pulled
+  it can still be cloned on demand (`wb pull <repo> --reset`), pulled
   and pod-ed.
 - `"legacy": true` — retired repos. Legacy repos get no pods. A legacy entry
   may reuse another entry's `id` (`sovereign-legacy` does), so the CLI
@@ -49,37 +50,53 @@ plus two optional flags:
 
 ```json
 {
+  "version": 1,
+  "name": "sovereignfs",
+  "defaults": { "branch": "main", "install": "pnpm", "carry": [".env"] },
+  "pods": { "dir": "pods", "portBase": 5000, "blockSize": 10 },
   "repos": [
-    { "id": "sovereign", "url": "...", "path": "sovereign", "type": "launcher" },
-    { "id": "sovereign-os", "url": "...", "path": "sovereign-os", "type": "os", "skip": true },
+    { "id": "sovereign", "url": "...", "path": "sovereign", "type": "launcher",
+      "pod": { "prefix": "p", "ports": [{ "key": "RUNTIME_PORT", "default": 3000 },
+                                        { "key": "AUTH_PORT", "default": 3001 }] } },
+    { "id": "sovereign-os", "url": "...", "path": "sovereign-os", "type": "os", "skip": true,
+      "pod": { "prefix": "os" } },
     { "id": "fjord", "url": "...", "path": "fjord", "type": "sovereign-app" }
   ]
 }
 ```
 
-A single CLI (invoked via the root `workbench.sh` shim) reads this manifest
-and handles everything ecosystem-level: initial checkout, and pod lifecycle
-(below). It's a real CLI (not a pile of shell scripts) so it can grow
-subcommands over time without becoming unmaintainable — the same reasoning
-behind `sovereign`'s own `sv` CLI, which this deliberately doesn't try to
-replace or extend; `sv` stays scoped to "manage one Sovereign instance,"
-the workbench CLI is scoped to "manage my ecosystem checkout."
+The CLI that reads this manifest is
+[`@sovereignfs/workbench`](https://github.com/sovereignfs/workbench)
+(`wb`). It is invoked here through the root `workbench.sh` shim and handles
+everything at the ecosystem level: checkout, status, pod lifecycle (below).
 
-`workbench init` clones every repo in the manifest (except `skip` entries)
+The CLI is deliberately generic and lives in its own repo. Anything
+Sovereign-specific is configuration in this manifest:
+- pod names
+- which env vars carry fixed ports
+- `pnpm` as the installer
+
+It's a real CLI, not a pile of shell scripts, so it can grow subcommands
+without becoming unmaintainable. That's the same reasoning behind
+`sovereign`'s own `sv` CLI, which `wb` deliberately doesn't try to replace
+or extend. `sv` stays scoped to "manage one Sovereign instance"; `wb` is
+scoped to "manage my ecosystem checkout."
+
+`wb init` clones every repo in the manifest (except `skip` entries)
 into its main checkout location. This is the one-time entry point for a new contributor: clone
 `sovereignfs/sovereignfs`, run the init command, and every project in the
 ecosystem is checked out and ready.
 
-## Keeping checkouts current: `workbench pull`
+## Keeping checkouts current: `wb pull`
 
-`workbench pull --all` updates `main` in every cloned repo, fast-forward
-only; `workbench pull <repo>` does one. On `main`, a dirty working tree is
+`wb pull --all` updates `main` in every cloned repo, fast-forward
+only; `wb pull <repo>` does one. On `main`, a dirty working tree is
 stashed (untracked included), pulled, and restored with `git stash apply`
 (the stash entry is kept as a safety net). On any other branch, local
 `main` is fast-forwarded in place with the working tree untouched.
-`workbench pull <repo> --reset` replaces a checkout with a fresh clone —
+`wb pull <repo> --reset` replaces a checkout with a fresh clone —
 the way to clone a `skip` repo — and refuses to throw away unpushed or
-uncommitted work without `--force`. This is distinct from `workbench clear`,
+uncommitted work without `--force`. This is distinct from `wb clear`,
 which stashes and resets every checkout to a clean `main`.
 
 ## Pods: isolated checkouts for parallel work
@@ -121,7 +138,7 @@ contain `sovereign-os`, and vice versa — each is self-contained on its own.
 ### When to use the main checkout vs. a pod
 
 The workbench's main checkouts (`sovereign/`, `sovereign-os/`, from
-`workbench init`) remain the default single-session working copies —
+`wb init`) remain the default single-session working copies —
 including for work that spans both projects, since having them side by
 side at the workbench root is exactly what that's for. Reach for a pod when
 running an **additional, concurrent** session against a project you're
@@ -150,22 +167,25 @@ beyond its own uncommitted work.
 ### Creating a pod
 
 Pods are created lazily, one at a time, on demand — a fresh workbench
-starts with zero pods. `workbench pod create <repo>...` handles:
+starts with zero pods. `wb pod create <repo>...` handles:
 
 1. Cloning the project fresh into the next free pod slot.
 2. Copying `.env` from that project's main checkout as a starting point.
-3. Rewriting every port-bearing value in that copied `.env` — not just a
-   single `PORT` variable, but every service the project runs on a fixed
-   port and every absolute URL that embeds one (`sovereign` runs a runtime
-   and an auth service on separate fixed ports; both need rewriting
-   consistently). Each pod gets a reserved port block computed from its
-   index, starting at `5000`/`5001` for `p1`.
-4. Installing dependencies inside the pod, independent of the main
-   checkout's `node_modules`.
+3. Rewriting every port-bearing value in that copied `.env`. That means
+   more than a single `PORT` variable: it covers every service the project
+   runs on a fixed port, and every `localhost` URL that embeds one.
+   `sovereign` runs a runtime and an auth service on separate fixed ports,
+   and both need rewriting consistently. The variables are listed under the
+   repo's `pod.ports` in the manifest. Each pod gets a reserved block of
+   ports computed from its index, starting at `5000`/`5001` for `p1`.
+4. Installing dependencies inside the pod (`pnpm install`, per the
+   manifest's `install`), independent of the main checkout's `node_modules`.
 
-`pnpm kill-port` is extended to accept a target port/range rather than
-assuming the main checkout's fixed ports, so a pod's dev server can be
-stopped without touching another pod's or the main checkout's process.
+`wb pod list` shows every pod with its port block and any local work.
+`wb pod remove` deletes a pod, but refuses if that would throw away
+uncommitted, unpushed or stashed work. `wb kill-port` takes a target port or
+range, so you can stop one pod's dev server without touching another pod's
+process or the main checkout's.
 
 ### What's deliberately not shared
 
